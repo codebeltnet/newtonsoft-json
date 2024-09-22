@@ -98,11 +98,13 @@ namespace Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Converte
 
                     Condition.FlipFlop(sensitivityDetails.HasFlag(FaultSensitivityDetails.Failure), () =>
                     {
+                        Assert.Contains("\"failure\":", json);
                         Assert.Contains("\"type\": \"System.OutOfMemoryException\"", json);
                         Assert.Contains("\"source\": \"Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Tests\"", json);
                         Assert.Contains("\"message\": \"Insufficient memory to continue the execution of the program.\"", json);
                     }, () =>
                     {
+                        Assert.DoesNotContain("\"failure\":", json);
                         Assert.DoesNotContain("\"type\": \"System.OutOfMemoryException\"", json);
                         Assert.DoesNotContain("\"source\": \"Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Tests\"", json);
                         Assert.DoesNotContain("\"message\": \"Insufficient memory to continue the execution of the program.\"", json);

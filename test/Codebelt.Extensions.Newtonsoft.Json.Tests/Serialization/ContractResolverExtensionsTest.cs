@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Xunit;
 using Xunit.Abstractions;
-using Xunit.Sdk;
 
 namespace Codebelt.Extensions.Newtonsoft.Json.Serialization
 {

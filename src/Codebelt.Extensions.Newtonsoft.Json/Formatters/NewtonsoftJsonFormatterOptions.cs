@@ -34,6 +34,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Formatters
                 list.AddStringFlagsEnumConverter();
                 list.AddStringEnumConverter();
                 list.AddTransientFaultExceptionConverter();
+                list.AddFailureConverter();
             };
         }
 

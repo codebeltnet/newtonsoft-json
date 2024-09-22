@@ -4,7 +4,6 @@ using Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Converters;
 using Codebelt.Extensions.Newtonsoft.Json.Formatters;
 using Cuemon;
 using Cuemon.AspNetCore.Diagnostics;
-using Cuemon.Extensions.DependencyInjection;
 using Cuemon.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -38,7 +37,7 @@ namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Formatters
         {
             Validator.ThrowIfNull(services);
             Validator.ThrowIfInvalidConfigurator(setup, out var options);
-            services.TryConfigure(setup ?? (o =>
+            services.Configure(setup ?? (o =>
             {
                 o.Settings = options.Settings;
                 o.SensitivityDetails = options.SensitivityDetails;
@@ -61,13 +60,14 @@ namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Formatters
         public static IServiceCollection AddNewtonsoftJsonExceptionResponseFormatter(this IServiceCollection services, Action<NewtonsoftJsonFormatterOptions> setup = null)
         {
             Validator.ThrowIfNull(services);
-            services.AddNewtonsoftJsonFormatterOptions(setup);
+            AddNewtonsoftJsonFormatterOptions(services, setup);
             services.TryAddSingleton(provider =>
             {
                 var options = provider.GetService<IOptions<NewtonsoftJsonFormatterOptions>>().Value;
+                var faultDescriptorOptions = provider.GetRequiredService<IOptions<FaultDescriptorOptions>>().Value;
                 return new HttpExceptionDescriptorResponseFormatter<NewtonsoftJsonFormatterOptions>(options)
                     .Adjust(o => o.Settings.Converters.AddHttpExceptionDescriptorConverter(edo => edo.SensitivityDetails = o.SensitivityDetails))
-                    .Populate((descriptor, contentType) => new StreamContent(NewtonsoftJsonFormatter.SerializeObject(descriptor, options))
+                    .Populate((descriptor, contentType) => new StreamContent(NewtonsoftJsonFormatter.SerializeObject(faultDescriptorOptions.FaultDescriptor == PreferredFaultDescriptor.FaultDetails ? descriptor : Decorator.Enclose(descriptor).ToProblemDetails(options.SensitivityDetails), options))
                     {
                         Headers = { { HttpHeaderNames.ContentType, contentType.MediaType } }
                     });

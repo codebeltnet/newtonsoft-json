@@ -12,4 +12,4 @@ Complements: [Codebelt.Extensions.Newtonsoft.Json namespace](/api/extensions/jso
 
 |Type|Ext|Methods|
 |--:|:-:|---|
-|JsonConverter|⬇️|`AddHttpExceptionDescriptorConverter`, `AddStringValuesConverter`|
+|JsonConverter|⬇️|`AddHttpExceptionDescriptorConverter`, `AddStringValuesConverter`, `AddProblemDetailsConverter`|
