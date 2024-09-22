@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Codebelt.Extensions.Newtonsoft.Json</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Codebelt.Extensions.Xunit" Version="8.4.1" />
+    <PackageReference Include="Cuemon.Extensions.Core" Version="8.3.2" />
+    <PackageReference Include="Cuemon.Extensions.IO" Version="8.3.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Codebelt.Extensions.Newtonsoft.Json\Codebelt.Extensions.Newtonsoft.Json.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net6.0</TargetFrameworks>
+    <ProjectGuid>a051b5d8-0986-4dea-b215-2e2b6068d125</ProjectGuid>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeSymbols>false</IncludeSymbols>
+    <Description>Provides a convenient set of default API additions for building a .NET application that favors Newtonsoft.Json.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json\Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.csproj" />
+    <ProjectReference Include="..\Codebelt.Extensions.AspNetCore.Newtonsoft.Json\Codebelt.Extensions.AspNetCore.Newtonsoft.Json.csproj" />
+    <ProjectReference Include="..\Codebelt.Extensions.Newtonsoft.Json\Codebelt.Extensions.Newtonsoft.Json.csproj" />
+  </ItemGroup>
+
+</Project>

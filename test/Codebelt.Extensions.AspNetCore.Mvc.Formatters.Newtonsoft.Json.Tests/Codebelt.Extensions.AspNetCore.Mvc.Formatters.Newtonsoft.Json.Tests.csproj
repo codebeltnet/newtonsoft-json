@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net6.0</TargetFrameworks>
+    <RootNamespace>Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json\Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.csproj" />
+  </ItemGroup>
+
+</Project>

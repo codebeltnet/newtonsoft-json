@@ -1,0 +1,46 @@
+﻿Version 8.4.0
+Availability: .NET 8 and .NET 6
+ 
+# ALM
+- CHANGED Dependencies to latest and greatest with respect to TFMs
+ 
+# References
+- Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json
+- Codebelt.Extensions.AspNetCore.Newtonsoft.Json
+- Codebelt.Extensions.Newtonsoft.Json
+ 
+Version 8.3.2
+Availability: .NET 8 and .NET 6
+ 
+# ALM
+- REMOVED Support for TFM .NET 7 (STS)
+ 
+Version 8.2.0
+Availability: .NET 8, .NET 7 and .NET 6
+ 
+# ALM
+- CHANGED Dependencies to latest and greatest with respect to TFMs
+ 
+Version: 8.1.0
+Availability: .NET 8, .NET 7 and .NET 6
+ 
+# ALM
+- CHANGED Dependencies to latest and greatest with respect to TFMs
+ 
+# New References
+- Codebelt.Extensions.AspNetCore.Newtonsoft.Json
+ 
+Version: 8.0.1
+Availability: .NET 8, .NET 7 and .NET 6
+ 
+# ALM
+- CHANGED Dependencies to latest and greatest with respect to TFMs
+ 
+Version: 8.0.0
+Availability: .NET 8, .NET 7 and .NET 6
+ 
+# ALM
+- ADDED TFM for net8.0
+- REMOVED TFM for netstandard2.0
+- CHANGED Dependencies to latest and greatest with respect to TFMs
+ 
