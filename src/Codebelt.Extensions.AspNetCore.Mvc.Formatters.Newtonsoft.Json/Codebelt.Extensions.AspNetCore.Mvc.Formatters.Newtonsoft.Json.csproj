@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net6.0</TargetFrameworks>
+    <ProjectGuid>1c96ab07-1025-4551-91e0-5938ef86e585</ProjectGuid>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>The Cuemon.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json namespace contains both types and extension methods that complements both the Cuemon.Extensions.Newtonsoft.Json/Cuemon.Extensions.AspNetCore.Newtonsoft.Json namespace while being an addition to the Microsoft.AspNetCore.Mvc namespace. Provides JSON formatters for ASP.NET Core MVC that is powered by Newtonsoft.Json.</Description>
+    <PackageTags>extension-methods extensions json-converters add-json-serialization-formatters add-json-formatter-options</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net8'))">
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net6'))">
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.33" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Cuemon.AspNetCore.Mvc" Version="8.3.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Codebelt.Extensions.AspNetCore.Newtonsoft.Json\Codebelt.Extensions.AspNetCore.Newtonsoft.Json.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ProjectGuid>b85030c3-38e9-424f-81cd-90fb3321a14b</ProjectGuid>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>The Codebelt.Extensions.Newtonsoft.Json namespace contains both types and extension methods that complements the Newtonsoft.Json namespace by adding new ways of working with JSON; both in terms of serialization and parsing.</Description>
+    <PackageTags>extension-methods extensions jdata jdata-result json-converter json-formatter dynamic-contract-resolver dynamic-json-converter write-object write-property-name</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Cuemon.Core" Version="8.3.2" />
+    <PackageReference Include="Cuemon.IO" Version="8.3.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+</Project>
