@@ -12,4 +12,4 @@ Complements: [Newtonsoft.Json.Converters namespace](https://www.newtonsoft.com/j
 
 |Type|Ext|Methods|
 |--:|:-:|---|
-|JsonConverter|⬇️|`AddStringEnumConverter`, `AddStringFlagsEnumConverter`, `AddExceptionDescriptorConverterOf{T}`, `AddExceptionConverter`, `AddDataPairConverter`, `AddTransientFaultExceptionConverter`|
+|JsonConverter|⬇️|`AddStringEnumConverter`, `AddStringFlagsEnumConverter`, `AddExceptionDescriptorConverterOf{T}`, `AddExceptionConverter`, `AddDataPairConverter`, `AddTransientFaultExceptionConverter`, `AddFailureConverter`|

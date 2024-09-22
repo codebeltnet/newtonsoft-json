@@ -20,6 +20,7 @@ namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json
                         NewtonsoftJsonFormatterOptions.DefaultConverters += list =>
                         {
                             list.AddStringValuesConverter();
+                            list.AddProblemDetailsConverter();
                         };
                     }
                 }

@@ -21,7 +21,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json
         /// <exception cref="ArgumentException">
         /// <paramref name="argument"/> must be a JSON representation that complies with RFC 8259.
         /// </exception>
-        public static void InvalidJsonDocument(this Validator _, string argument, [CallerArgumentExpression(nameof(argument))] string paramName = null, string message = "Value must be a JSON representation that complies with RFC 8259.")
+        public static void InvalidJsonDocument(this Validator _, string argument, string message = "Value must be a JSON representation that complies with RFC 8259.", [CallerArgumentExpression(nameof(argument))] string paramName = null)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json
         /// <exception cref="ArgumentException">
         /// <paramref name="argument"/> must be a JSON representation that complies with RFC 8259.
         /// </exception>
-        public static void InvalidJsonDocument(this Validator _, ref JsonReader argument, [CallerArgumentExpression(nameof(argument))] string paramName = null, string message = "Value must be a JSON representation that complies with RFC 8259.")
+        public static void InvalidJsonDocument(this Validator _, ref JsonReader argument, string message = "Value must be a JSON representation that complies with RFC 8259.", [CallerArgumentExpression(nameof(argument))] string paramName = null)
         {
             if (argument == null) { return; }
             var reader = argument;

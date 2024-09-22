@@ -11,6 +11,20 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 
 This major release is first and foremost focused on ironing out any wrinkles that have been introduced with .NET 9 preview releases so the final release is production ready together with the official launch from Microsoft.
 
+### Added
+
+- FailureConverter class in the Cuemon.Extensions.Newtonsoft.Json.Converters namespace to convert FailureConverter to JSON
+
+### Changed
+
+- JsonConverterCollectionExtensions class in the Cuemon.Extensions.AspNetCore.Newtonsoft.Json.Converters namespace was extended to include one new extension method: AddProblemDetailsConverter
+- JsonConverterCollectionExtensions class in the Cuemon.Extensions.Newtonsoft.Json.Converters namespace was extended to include one new extension method: AddFailureConverter
+- ValidatorExtensions class in the Codebelt.Extensions.Newtonsoft.Json namespace to be compliant with https://rules.sonarsource.com/csharp/type/Bug/RSPEC-3343/ (breaking change)
+
+### Removed
+
+- HttpExceptionDescriptorResponseHandlerExtensions class from the Cuemon.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json namespace (breaking change)
+
 ## [8.4.0] - 2024-09-22
 
 ### Dependencies

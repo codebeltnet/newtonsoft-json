@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(IsTestProject)' == 'false'">
-    <TargetFrameworks>net8.0;net6.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net9.0;net8.0;netstandard2.0</TargetFrameworks>
     <Copyright>Copyright © Geekle 2024. All rights reserved.</Copyright>
     <Authors>gimlichael</Authors>
     <Company>Geekle</Company>
@@ -49,11 +49,11 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(IsTestProject)' == 'true' AND '$(IsLinux)' == 'true'">
-    <TargetFrameworks>net8.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(IsTestProject)' == 'true' AND '$(IsWindows)' == 'true'">
-    <TargetFrameworks>net8.0;net6.0;net48</TargetFrameworks>
+    <TargetFrameworks>net9.0;net8.0;net48</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
@@ -81,7 +81,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Codebelt.Extensions.Xunit.App" Version="8.4.1" />
+    <PackageReference Include="Codebelt.Extensions.Xunit.App" Version="9.0.0-preview.2" />
   </ItemGroup>
 
 </Project>
