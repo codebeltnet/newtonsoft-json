@@ -56,7 +56,7 @@ jobs:
         run: |
           if [ "${{ matrix.framework }}" == "netstandard2.0" ]; then
             projects=(
-              "src/**/Cuemon.Extensions.Newtonsoft.Json.csproj"
+              "src/**/Codebelt.Extensions.Newtonsoft.Json.csproj"
             )
             echo "PROJECTS=$(IFS=' '; echo "${projects[*]}")" >> $GITHUB_ENV
           else
