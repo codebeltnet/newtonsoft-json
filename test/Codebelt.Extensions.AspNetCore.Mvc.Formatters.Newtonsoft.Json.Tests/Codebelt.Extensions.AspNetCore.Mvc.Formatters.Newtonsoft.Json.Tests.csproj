@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Cuemon.Extensions.AspNetCore.Mvc" Version="9.0.0-preview.9" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json\Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.csproj" />
   </ItemGroup>
 

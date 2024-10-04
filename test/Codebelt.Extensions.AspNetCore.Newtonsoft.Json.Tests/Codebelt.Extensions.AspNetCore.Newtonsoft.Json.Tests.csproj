@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
+    <RootNamespace>Codebelt.Extensions.AspNetCore.Newtonsoft.Json</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Cuemon.Extensions.AspNetCore.Authentication" Version="9.0.0-preview.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Codebelt.Extensions.AspNetCore.Newtonsoft.Json\Codebelt.Extensions.AspNetCore.Newtonsoft.Json.csproj" />
+  </ItemGroup>
+
+</Project>
