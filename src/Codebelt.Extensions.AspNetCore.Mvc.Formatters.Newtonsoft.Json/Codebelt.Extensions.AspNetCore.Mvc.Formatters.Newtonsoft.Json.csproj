@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Description>The Cuemon.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json namespace contains both types and extension methods that complements both the Cuemon.Extensions.Newtonsoft.Json/Cuemon.Extensions.AspNetCore.Newtonsoft.Json namespace while being an addition to the Microsoft.AspNetCore.Mvc namespace. Provides JSON formatters for ASP.NET Core MVC that is powered by Newtonsoft.Json.</Description>
+    <Description>The Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json namespace contains both types and extension methods that complements both the Codebelt.Extensions.Newtonsoft.Json/Codebelt.Extensions.AspNetCore.Newtonsoft.Json namespace while being an addition to the Microsoft.AspNetCore.Mvc namespace. Provides JSON formatters for ASP.NET Core MVC that is powered by Newtonsoft.Json.</Description>
     <PackageTags>extension-methods extensions json-converters add-json-serialization-formatters add-json-formatter-options</PackageTags>
   </PropertyGroup>
 
@@ -23,8 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cuemon.AspNetCore.Mvc" Version="9.0.0-preview.7" />
-    <PackageReference Include="Cuemon.Extensions.IO" Version="9.0.0-preview.7" />
+    <PackageReference Include="Cuemon.AspNetCore.Mvc" Version="9.0.0-preview.9" />
+    <PackageReference Include="Cuemon.Extensions.IO" Version="9.0.0-preview.9" />
   </ItemGroup>
 
   <ItemGroup>

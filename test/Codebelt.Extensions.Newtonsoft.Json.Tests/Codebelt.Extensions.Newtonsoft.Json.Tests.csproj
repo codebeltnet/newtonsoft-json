@@ -9,9 +9,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Codebelt.Extensions.Xunit" Version="9.0.0-preview.2" />
-    <PackageReference Include="Cuemon.Extensions.Core" Version="9.0.0-preview.7" />
-    <PackageReference Include="Cuemon.Extensions.IO" Version="9.0.0-preview.7" />
+    <PackageReference Include="Codebelt.Extensions.Xunit" Version="9.0.0-preview.8" />
+    <PackageReference Include="Cuemon.Extensions.Core" Version="9.0.0-preview.9" />
+    <PackageReference Include="Cuemon.Extensions.IO" Version="9.0.0-preview.9" />
   </ItemGroup>
 
   <ItemGroup>
