@@ -23,7 +23,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
         /// <returns>A reference to <paramref name="converters"/> after the operation has completed.</returns>
         public static ICollection<JsonConverter> AddStringEnumConverter(this ICollection<JsonConverter> converters, NamingStrategy ns = null)
         {
-            converters.Add(ns != null ? new StringEnumConverter(ns) : DynamicJsonConverter.Create(new StringEnumConverter()));
+            converters.Add(ns != null ? new StringEnumConverter(ns) : JsonConverterFactory.Create(new StringEnumConverter()));
             return converters;
         }
 
@@ -35,7 +35,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
         /// <returns>A reference to <paramref name="converters" /> after the operation has completed.</returns>
         public static ICollection<JsonConverter> AddStringFlagsEnumConverter(this ICollection<JsonConverter> converters, NamingStrategy ns = null)
         {
-            converters.Add(ns != null ? new StringFlagsEnumConverter(ns) : DynamicJsonConverter.Create(new StringFlagsEnumConverter()));
+            converters.Add(ns != null ? new StringFlagsEnumConverter(ns) : JsonConverterFactory.Create(new StringFlagsEnumConverter()));
             return converters;
         }
 
@@ -49,7 +49,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
         /// <returns>A reference to <paramref name="converters" /> after the operation has completed.</returns>
         public static ICollection<JsonConverter> AddExceptionDescriptorConverterOf<T>(this ICollection<JsonConverter> converters, Action<ExceptionDescriptorOptions> setup = null, Action<JsonWriter, T, JsonSerializer> afterWriteErrorStartObject = null, Action<JsonWriter, T, JsonSerializer> beforeWriteEndObject = null) where T : ExceptionDescriptor
         {
-            converters.Add(DynamicJsonConverter.Create<T>(type => type == typeof(T), (writer, descriptor, serializer) =>
+            converters.Add(JsonConverterFactory.Create<T>(type => type == typeof(T), (writer, descriptor, serializer) =>
             {
                 var options = Patterns.Configure(setup);
                 writer.WriteStartObject();
@@ -108,7 +108,10 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
         /// <returns>A reference to <paramref name="converters"/> after the operation has completed.</returns>
         public static ICollection<JsonConverter> AddFailureConverter(this ICollection<JsonConverter> converters)
         {
-            converters.Add(new FailureConverter());
+            converters.Add(JsonConverterFactory.Create<Failure>((writer, failure, serializer) =>
+            {
+                new ExceptionConverter(failure.GetUnderlyingSensitivity().HasFlag(FaultSensitivityDetails.StackTrace), failure.GetUnderlyingSensitivity().HasFlag(FaultSensitivityDetails.Data)).WriteJson(writer, failure.GetUnderlyingException(), serializer);
+            }));
             return converters;
         }
 
@@ -130,7 +133,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
         /// <returns>A reference to <paramref name="converters"/> after the operation has completed.</returns>
         public static ICollection<JsonConverter> AddDataPairConverter(this ICollection<JsonConverter> converters)
         {
-            converters.Add(DynamicJsonConverter.Create<DataPair>((writer, dp, serializer) =>
+            converters.Add(JsonConverterFactory.Create<DataPair>((writer, dp, serializer) =>
             {
                 writer.WriteStartObject();
                 writer.WritePropertyName("Name", serializer);

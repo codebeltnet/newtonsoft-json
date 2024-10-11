@@ -195,7 +195,7 @@ namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Formatters
                                       "at Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Formatters.ServiceCollectionExtensionsTest.<>c.<<AddNewtonsoftJsonExceptionResponseFormatter_ShouldCaptureException_RenderAsProblemDetails_UsingNewtonsoftJson_WithSensitivityAll>*"
                                     ],
                                     "data": {
-                                      "key": "data value"
+                                      "1st": "data value"
                                     },
                                     "paramName": "app"
                                   }

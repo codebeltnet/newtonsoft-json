@@ -12,7 +12,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Serialization
 {
     public class ContractResolverExtensionsTest : Test
     {
-        private readonly JsonConverter _tsConverter = DynamicJsonConverter.Create<TimeSpan>((writer, value, serializer) =>
+        private readonly JsonConverter _tsConverter = JsonConverterFactory.Create<TimeSpan>((writer, value, serializer) =>
         {
             writer.WriteStartObject();
             writer.WritePropertyName("Ticks", serializer);

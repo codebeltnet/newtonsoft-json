@@ -9,7 +9,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json
     /// <summary>
     /// Provides a factory based way to create and wrap an <see cref="JsonConverter"/> implementation.
     /// </summary>
-    public static class DynamicJsonConverter
+    public static class JsonConverterFactory
     {
         /// <summary>
         /// Creates a dynamic instance of an <see cref="JsonConverter"/> implementation wrapping <see cref="JsonConverter.WriteJson"/> through <paramref name="writer"/> and <see cref="JsonConverter.ReadJson"/> through <paramref name="reader"/>.
@@ -36,7 +36,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json
         {
             var castedWriter = writer == null ? (Action<JsonWriter, object, JsonSerializer>)null : (w, t, s) => writer(w, (T)t, s);
             var castedReader = reader == null ? (Func<JsonReader, Type, object, JsonSerializer, object>)null : (r, t, o, s) => reader(r, t, (T)o, s);
-            return new DynamicJsonConverterCore(predicate, castedWriter, castedReader, typeof(T));
+            return new DynamicJsonConverter(predicate, castedWriter, castedReader, typeof(T));
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json
         /// <returns>An <see cref="JsonConverter" /> implementation of <paramref name="objectType"/>.</returns>
         public static JsonConverter Create(Type objectType, Action<JsonWriter, object, JsonSerializer> writer = null, Func<JsonReader, Type, object, JsonSerializer, object> reader = null)
         {
-            return new DynamicJsonConverterCore(objectType.IsAssignableFrom, writer, reader, objectType);
+            return new DynamicJsonConverter(objectType.IsAssignableFrom, writer, reader, objectType);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json
         /// <returns>An <see cref="JsonConverter" /> implementation of <see cref="Type"/>.</returns>
         public static JsonConverter Create(Func<Type, bool> predicate, Action<JsonWriter, object, JsonSerializer> writer = null, Func<JsonReader, Type, object, JsonSerializer, object> reader = null)
         {
-            return new DynamicJsonConverterCore(predicate, writer, reader);
+            return new DynamicJsonConverter(predicate, writer, reader);
         }
 
         /// <summary>
@@ -70,13 +70,13 @@ namespace Codebelt.Extensions.Newtonsoft.Json
         /// <returns>An <see cref="JsonConverter" /> implementation of <see cref="Type"/>.</returns>
         public static JsonConverter Create(JsonConverter converter)
         {
-            return new DynamicJsonConverterCore(converter.CanConvert, converter.WriteJson, converter.ReadJson, searchForNamingStrategy: true);
+            return new DynamicJsonConverter(converter.CanConvert, converter.WriteJson, converter.ReadJson, searchForNamingStrategy: true);
         }
     }
 
-    internal sealed class DynamicJsonConverterCore : JsonConverter
+    internal sealed class DynamicJsonConverter : JsonConverter
     {
-        internal DynamicJsonConverterCore(Func<Type, bool> predicate, Action<JsonWriter, object, JsonSerializer> writer, Func<JsonReader, Type, object, JsonSerializer, object> reader, Type objectType = null, bool searchForNamingStrategy = false)
+        internal DynamicJsonConverter(Func<Type, bool> predicate, Action<JsonWriter, object, JsonSerializer> writer, Func<JsonReader, Type, object, JsonSerializer, object> reader, Type objectType = null, bool searchForNamingStrategy = false)
         {
             Predicate = predicate;
             Writer = writer;
