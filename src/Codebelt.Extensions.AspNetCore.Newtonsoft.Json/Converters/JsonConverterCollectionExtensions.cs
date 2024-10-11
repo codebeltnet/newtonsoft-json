@@ -24,8 +24,8 @@ namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Converters
         /// <returns>A reference to <paramref name="converters"/> after the operation has completed.</returns>
         public static ICollection<JsonConverter> AddProblemDetailsConverter(this ICollection<JsonConverter> converters)
         {
-            converters.Add(DynamicJsonConverter.Create<ProblemDetails>(WriteProblemDetails));
-            converters.Add(DynamicJsonConverter.Create<IDecorator<ProblemDetails>>((writer, dpd, serializer) => WriteProblemDetails(writer, dpd.Inner, serializer)));
+            converters.Add(JsonConverterFactory.Create<ProblemDetails>(WriteProblemDetails));
+            converters.Add(JsonConverterFactory.Create<IDecorator<ProblemDetails>>((writer, dpd, serializer) => WriteProblemDetails(writer, dpd.Inner, serializer)));
             return converters;
         }
 
@@ -83,26 +83,26 @@ namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Converters
             {
                 if (descriptor.Instance != null)
                 {
-                    JsonWriterExtensions.WritePropertyName(writer, "Instance", serializer);
+                    writer.WritePropertyName("Instance", serializer);
                     writer.WriteValue(descriptor.Instance.OriginalString);
                 }
-                JsonWriterExtensions.WritePropertyName(writer, "Status", serializer);
+                writer.WritePropertyName("Status", serializer);
                 writer.WriteValue(descriptor.StatusCode);
             }, (writer, descriptor, serializer) =>
             {
                 if (!string.IsNullOrWhiteSpace(descriptor.CorrelationId))
                 {
-                    JsonWriterExtensions.WritePropertyName(writer, "CorrelationId", serializer);
+                    writer.WritePropertyName("CorrelationId", serializer);
                     writer.WriteValue(descriptor.CorrelationId);
                 }
                 if (!string.IsNullOrWhiteSpace(descriptor.RequestId))
                 {
-                    JsonWriterExtensions.WritePropertyName(writer, "RequestId", serializer);
+                    writer.WritePropertyName("RequestId", serializer);
                     writer.WriteValue(descriptor.RequestId);
                 }
                 if (!string.IsNullOrWhiteSpace(descriptor.TraceId))
                 {
-                    JsonWriterExtensions.WritePropertyName(writer, "TraceId", serializer);
+                    writer.WritePropertyName("TraceId", serializer);
                     writer.WriteValue(descriptor.TraceId);
                 }
             });
@@ -116,7 +116,7 @@ namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Converters
         /// <returns>A reference to <paramref name="converters"/> after the operation has completed.</returns>
         public static ICollection<JsonConverter> AddStringValuesConverter(this ICollection<JsonConverter> converters)
         {
-            converters.Add(DynamicJsonConverter.Create<StringValues>((writer, values, _) =>
+            converters.Add(JsonConverterFactory.Create<StringValues>((writer, values, _) =>
             {
                 if (values.Count <= 1)
                 {
