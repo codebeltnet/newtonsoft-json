@@ -91,7 +91,7 @@ namespace Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json
                                               "at Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Assets.StatusCodesController.Get_XXX(String app)*"
                                             ],
                                             "data": {
-                                              "key": "serverError"
+                                              "app": "serverError"
                                             },
                                             "paramName": "app"
                                           }
@@ -168,7 +168,7 @@ namespace Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json
                                               "at Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Assets.StatusCodesController.Get_XXX(String app)*"
                                             ],
                                             "data": {
-                                              "key": "serverError"
+                                              "app": "serverError"
                                             },
                                             "paramName": "app"
                                           }
@@ -194,7 +194,7 @@ namespace Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json
                                             "source": "Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Tests",
                                             "message": "This is an inner exception message ... (Parameter 'app')",
                                             "data": {
-                                              "key": "serverError"
+                                              "app": "serverError"
                                             },
                                             "paramName": "app"
                                           }
