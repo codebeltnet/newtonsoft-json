@@ -17,7 +17,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Formatters
     /// </summary>
     public class NewtonsoftJsonFormatterOptions : IExceptionDescriptorOptions, IContentNegotiation, IValidatableParameterObject
     {
-        private readonly object _locker = new();
+        private readonly Lock _locker = LockFactory.Create();
         private bool _refreshed;
 
         /// <summary>

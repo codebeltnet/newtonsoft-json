@@ -1,11 +1,12 @@
 ﻿using Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Converters;
 using Codebelt.Extensions.Newtonsoft.Json.Formatters;
+using System.Threading;
 
 namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json
 {
     internal static class Bootstrapper
     {
-        private static readonly object PadLock = new();
+        private static readonly Lock PadLock = new();
         private static bool _initialized;
 
         internal static void Initialize()
