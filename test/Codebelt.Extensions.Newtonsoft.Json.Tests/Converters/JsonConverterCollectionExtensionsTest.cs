@@ -22,7 +22,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
         [Fact]
         public void AddStringEnumConverter_ShouldAddStringEnumConverterToConverterCollection_WithPascalCase()
         {
-            var sut1 = HorizontalDirection.Left;
+            var sut1 = DayOfWeek.Saturday;
             var sut2 = new NewtonsoftJsonFormatterOptions();
             sut2.Settings.ContractResolver = new DefaultContractResolver();
             sut2.Settings.Converters.Clear();
@@ -44,8 +44,8 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
 
                 Assert.True(jc.CanWrite);
                 Assert.True(jc.CanRead);
-                Assert.True(jc.CanConvert(typeof(HorizontalDirection)));
-                Assert.Equal("\"Left\"", json);
+                Assert.True(jc.CanConvert(typeof(DayOfWeek)));
+                Assert.Equal("\"Saturday\"", json);
 
                 TestOutput.WriteLine(json);
             });
@@ -89,7 +89,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
         [Fact]
         public void AddStringEnumConverter_ShouldAddStringEnumConverterToConverterCollection()
         {
-            var sut1 = HorizontalDirection.Left;
+            var sut1 = DayOfWeek.Saturday;
             var sut2 = new NewtonsoftJsonFormatterOptions();
             sut2.Settings.Converters.Clear();
             sut2.Settings.Converters.AddStringEnumConverter();
@@ -110,8 +110,8 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
 
                 Assert.True(jc.CanWrite);
                 Assert.True(jc.CanRead);
-                Assert.True(jc.CanConvert(typeof(HorizontalDirection)));
-                Assert.Equal("\"left\"", json);
+                Assert.True(jc.CanConvert(typeof(DayOfWeek)));
+                Assert.Equal("\"saturday\"", json);
 
                 TestOutput.WriteLine(json);
             });

@@ -10,17 +10,10 @@
     <PackageTags>extension-methods extensions json-converters add-json-serialization-formatters add-json-formatter-options</PackageTags>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net9'))">
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.0-rc.2.24474.3" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net8'))">
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.10" />
-  </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Cuemon.AspNetCore.Mvc" Version="9.0.0-preview.11" />
-    <PackageReference Include="Cuemon.Extensions.IO" Version="9.0.0-preview.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
+    <PackageReference Include="Cuemon.AspNetCore.Mvc" />
+    <PackageReference Include="Cuemon.Extensions.IO" />
   </ItemGroup>
 
   <ItemGroup>
