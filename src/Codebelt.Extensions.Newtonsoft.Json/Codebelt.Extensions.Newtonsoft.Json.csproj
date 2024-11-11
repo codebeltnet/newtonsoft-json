@@ -10,9 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cuemon.Core" Version="9.0.0-preview.11" />
-    <PackageReference Include="Cuemon.IO" Version="9.0.0-preview.11" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Cuemon.Core" />
+    <PackageReference Include="Cuemon.IO" />
+    <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
 </Project>

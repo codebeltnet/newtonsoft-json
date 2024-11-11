@@ -7,7 +7,7 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Newtonsoft.Json, Cuemon.Extensions.AspNetCore.Newtonsoft.Json and Cuemon.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.
 
-## [9.0.0] - TBD
+## [9.0.0] - 2024-11-13
 
 This major release is first and foremost focused on ironing out any wrinkles that have been introduced with .NET 9 preview releases so the final release is production ready together with the official launch from Microsoft.
 
@@ -20,6 +20,7 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - JsonConverterCollectionExtensions class in the Cuemon.Extensions.AspNetCore.Newtonsoft.Json.Converters namespace was extended to include one new extension method: AddProblemDetailsConverter
 - JsonConverterCollectionExtensions class in the Cuemon.Extensions.Newtonsoft.Json.Converters namespace was extended to include one new extension method: AddFailureConverter
 - ValidatorExtensions class in the Codebelt.Extensions.Newtonsoft.Json namespace to be compliant with https://rules.sonarsource.com/csharp/type/Bug/RSPEC-3343/ (breaking change)
+- DynamicJsonConverter class in the Codebelt.Extensions.Newtonsoft.Json namespace was renamed to JsonConverterFactory (breaking change)
 
 ### Removed
 
