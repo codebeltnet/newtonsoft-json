@@ -26,6 +26,7 @@ Provides a convenient set of default API additions for JSON related operations.
 
 ### Contributing to `Extensions for Newtonsoft.Json API by Codebelt`
 [Contributions](.github/CONTRIBUTING.md) are welcome and encouraged.
+
 Feel free to submit issues, feature requests, or pull requests to help improve this library.
 
 ### License
