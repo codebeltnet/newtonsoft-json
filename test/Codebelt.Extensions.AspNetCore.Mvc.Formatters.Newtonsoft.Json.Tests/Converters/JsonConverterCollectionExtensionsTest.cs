@@ -40,7 +40,7 @@ namespace Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Converte
                 oome = e;
             }
 
-            using (var middleware = WebHostTestFactory.Create())
+            using (var middleware = WebHostTestFactory.Create(hostFixture: null))
             {
                 var context = middleware.ServiceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext;
                 var correlationId = Guid.NewGuid().ToString("N");

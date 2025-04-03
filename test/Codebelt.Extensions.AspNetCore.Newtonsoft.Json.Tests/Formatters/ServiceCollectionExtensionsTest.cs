@@ -66,7 +66,7 @@ namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Formatters
                 {
                     client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
                     return client.GetAsync("/");
-                });
+                }, hostFixture: null);
 
             var body = await response.Content.ReadAsStringAsync();
 
@@ -161,7 +161,7 @@ namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Formatters
                 {
                     client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
                     return client.GetAsync("/");
-                });
+                }, hostFixture: null);
 
             var body = await response.Content.ReadAsStringAsync();
 
@@ -249,7 +249,7 @@ namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Formatters
                        {
                            endpoints.MapGet("/", context => context.Response.WriteAsync($"Hello {context.User.Identity!.Name}"));
                        });
-                   }))
+                   }, hostFixture: null))
             {
                 var client = startup.Host.GetTestClient();
                 var bb = new BasicAuthorizationHeaderBuilder()
