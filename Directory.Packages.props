@@ -3,17 +3,17 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Codebelt.Extensions.Xunit" Version="9.0.1" />
-    <PackageVersion Include="Codebelt.Extensions.Xunit.App" Version="9.0.1" />
-    <PackageVersion Include="Cuemon.AspNetCore.Mvc" Version="9.0.1" />
-    <PackageVersion Include="Cuemon.Core" Version="9.0.1" />
-    <PackageVersion Include="Cuemon.Extensions.AspNetCore" Version="9.0.1" />
-    <PackageVersion Include="Cuemon.Extensions.AspNetCore.Authentication" Version="9.0.1" />
-    <PackageVersion Include="Cuemon.Extensions.AspNetCore.Mvc" Version="9.0.1" />
-    <PackageVersion Include="Cuemon.Extensions.Core" Version="9.0.1" />
-    <PackageVersion Include="Cuemon.Extensions.IO" Version="9.0.1" />
-    <PackageVersion Include="Cuemon.IO" Version="9.0.1" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageVersion Include="Codebelt.Extensions.Xunit" Version="9.1.2" />
+    <PackageVersion Include="Codebelt.Extensions.Xunit.App" Version="9.1.2" />
+    <PackageVersion Include="Cuemon.AspNetCore.Mvc" Version="9.0.3" />
+    <PackageVersion Include="Cuemon.Core" Version="9.0.3" />
+    <PackageVersion Include="Cuemon.Extensions.AspNetCore" Version="9.0.3" />
+    <PackageVersion Include="Cuemon.Extensions.AspNetCore.Authentication" Version="9.0.3" />
+    <PackageVersion Include="Cuemon.Extensions.AspNetCore.Mvc" Version="9.0.3" />
+    <PackageVersion Include="Cuemon.Extensions.Core" Version="9.0.3" />
+    <PackageVersion Include="Cuemon.Extensions.IO" Version="9.0.3" />
+    <PackageVersion Include="Cuemon.IO" Version="9.0.3" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageVersion Include="MinVer" Version="6.0.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="System.Net.Http" Version="4.3.4" />
@@ -21,12 +21,12 @@
     <PackageVersion Include="coverlet.msbuild" Version="6.0.4" />
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.runner.console" Version="2.9.3" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.1" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.2" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('net9'))">
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.3" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('net8'))">
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.12" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.14" />
   </ItemGroup>
 </Project>
