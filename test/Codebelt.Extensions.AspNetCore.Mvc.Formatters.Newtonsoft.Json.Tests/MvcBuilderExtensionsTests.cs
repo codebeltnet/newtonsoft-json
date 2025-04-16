@@ -49,7 +49,7 @@ namespace Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json
                 {
                     client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
                     return client.GetAsync("/statuscodes/XXX/serverError");
-                });
+                }, hostFixture: null);
 
             var body = await response.Content.ReadAsStringAsync();
             TestOutput.WriteLine(body);
@@ -309,7 +309,7 @@ namespace Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json
                 {
                     client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
                     return client.GetAsync("/statuscodes/XXX/serverError");
-                });
+                }, hostFixture: null);
 
             var body = await response.Content.ReadAsStringAsync();
             TestOutput.WriteLine(body);

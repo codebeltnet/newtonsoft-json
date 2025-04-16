@@ -56,7 +56,7 @@ namespace Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json
                    {
                        app.UseRouting();
                        app.UseEndpoints(routes => { routes.MapControllers(); });
-                   }))
+                   }, hostFixture: null))
             {
                 var client = filter.Host.GetTestClient();
 

@@ -59,7 +59,7 @@ namespace Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json
                    {
                        app.UseRouting();
                        app.UseEndpoints(routes => { routes.MapControllers(); });
-                   }))
+                   }, hostFixture: null))
             {
                 var wf = new WeatherForecast();
                 var formatter = new NewtonsoftJsonFormatter(o =>
