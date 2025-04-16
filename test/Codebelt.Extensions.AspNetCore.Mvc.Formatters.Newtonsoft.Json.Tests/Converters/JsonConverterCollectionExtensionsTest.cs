@@ -42,7 +42,7 @@ namespace Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Converte
 
             using (var middleware = WebHostTestFactory.Create(hostFixture: null))
             {
-                var context = middleware.ServiceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext;
+                var context = middleware.Host.Services.GetRequiredService<IHttpContextAccessor>().HttpContext;
                 var correlationId = Guid.NewGuid().ToString("N");
                 var requestId = Guid.NewGuid().ToString("N");
 
