@@ -7,6 +7,10 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Newtonsoft.Json, Cuemon.Extensions.AspNetCore.Newtonsoft.Json and Cuemon.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.
 
+## [9.0.6] - 2025-08-19
+
+This is a service update that focuses on package dependencies.
+
 ## [9.0.5] - 2025-07-11
 
 This is a service update that focuses on package dependencies.
