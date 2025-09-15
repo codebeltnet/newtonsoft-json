@@ -59,7 +59,8 @@ jobs:
       configuration: ${{ matrix.configuration }}
       runs-on: ${{ matrix.os }}
       build-switches: -p:SkipSignAssembly=true
-      restore: true
+      restore: true # net48 requires restore
+      build: true # net48 requires build
           
   sonarcloud:
     name: call-sonarcloud
