@@ -2,6 +2,11 @@
 
 An open-source project (MIT license) that targets and complements the [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json) serializer engine. It aims to provide a uniform and convenient developer experience when working with JSON.
 
+Your versatile Newtonsoft.Json companion for:
+- Modern development with `.NET 9` and `.NET 10`,
+- Cross-platform libraries with `.NET Standard 2` (where applicable),
+- Legacy applications on `.NET Framework 4.6.2` and newer.
+
 It is, by heart, free, flexible and built to extend and boost your agile codebelt.
 
 ## **Codebelt.Extensions.AspNetCore.Text.Json** for .NET
