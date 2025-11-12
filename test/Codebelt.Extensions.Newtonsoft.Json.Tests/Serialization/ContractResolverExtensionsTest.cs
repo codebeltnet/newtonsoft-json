@@ -1,12 +1,10 @@
 ﻿using System;
 using Codebelt.Extensions.Newtonsoft.Json.Formatters;
 using Codebelt.Extensions.Xunit;
-using Cuemon.Extensions;
 using Cuemon.Extensions.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Codebelt.Extensions.Newtonsoft.Json.Serialization
 {

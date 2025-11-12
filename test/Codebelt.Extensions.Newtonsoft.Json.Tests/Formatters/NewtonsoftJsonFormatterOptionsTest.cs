@@ -7,7 +7,6 @@ using Cuemon.Diagnostics;
 using Cuemon.Reflection;
 using Newtonsoft.Json;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Codebelt.Extensions.Newtonsoft.Json.Formatters
 {

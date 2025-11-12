@@ -18,7 +18,6 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Formatters
 {
@@ -218,7 +217,7 @@ namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Formatters
         [Theory]
         [InlineData(FaultSensitivityDetails.All)]
         [InlineData(FaultSensitivityDetails.None)]
-        public async void AddNewtonsoftJsonExceptionResponseFormatter_AuthorizationResponseHandler_BasicScheme_ShouldRenderResponseInJsonByNewtonsoft_UsingAspNetBootstrapping(FaultSensitivityDetails sensitivityDetails)
+        public async Task AddNewtonsoftJsonExceptionResponseFormatter_AuthorizationResponseHandler_BasicScheme_ShouldRenderResponseInJsonByNewtonsoft_UsingAspNetBootstrapping(FaultSensitivityDetails sensitivityDetails)
         {
             using (var startup = WebHostTestFactory.Create(services =>
                    {

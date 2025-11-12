@@ -9,7 +9,6 @@ using Cuemon.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Codebelt.Extensions.Newtonsoft.Json.Converters
 {
