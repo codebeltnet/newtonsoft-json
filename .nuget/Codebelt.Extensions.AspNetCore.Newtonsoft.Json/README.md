@@ -9,7 +9,7 @@ Your versatile Newtonsoft.Json companion for:
 
 It is, by heart, free, flexible and built to extend and boost your agile codebelt.
 
-## **Codebelt.Extensions.AspNetCore.Text.Json** for .NET
+## **Codebelt.Extensions.AspNetCore.Newtonsoft.Json** for .NET
 
 The `Codebelt.Extensions.AspNetCore.Newtonsoft.Json` namespace contains both types and extension methods that complements the `Codebelt.AspNetCore`/`Codebelt.Extensions.Newtonsoft.Json` namespace while being an addition to the `Microsoft.AspNetCore` namespace. Extends upon JSON formatters and converters in the context of ASP.NET Core for `Newtonsoft.Json`.
 
