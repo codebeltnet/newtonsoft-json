@@ -10,7 +10,6 @@ using Cuemon.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json
 {
