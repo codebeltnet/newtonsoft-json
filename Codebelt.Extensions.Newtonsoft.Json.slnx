@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json/Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.csproj" />
+    <Project Path="src/Codebelt.Extensions.AspNetCore.Newtonsoft.Json/Codebelt.Extensions.AspNetCore.Newtonsoft.Json.csproj" />
+    <Project Path="src/Codebelt.Extensions.Newtonsoft.Json.App/Codebelt.Extensions.Newtonsoft.Json.App.csproj" />
+    <Project Path="src/Codebelt.Extensions.Newtonsoft.Json/Codebelt.Extensions.Newtonsoft.Json.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Tests/Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Tests.csproj" />
+    <Project Path="test/Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Tests/Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Tests.csproj" />
+    <Project Path="test/Codebelt.Extensions.Newtonsoft.Json.Tests/Codebelt.Extensions.Newtonsoft.Json.Tests.csproj" />
+  </Folder>
+</Solution>
