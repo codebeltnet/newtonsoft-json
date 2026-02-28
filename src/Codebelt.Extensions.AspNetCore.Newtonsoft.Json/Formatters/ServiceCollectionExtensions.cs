@@ -4,6 +4,7 @@ using Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Converters;
 using Codebelt.Extensions.Newtonsoft.Json.Formatters;
 using Cuemon;
 using Cuemon.AspNetCore.Diagnostics;
+using Cuemon.Extensions.DependencyInjection;
 using Cuemon.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -37,7 +38,7 @@ namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Formatters
         {
             Validator.ThrowIfNull(services);
             Validator.ThrowIfInvalidConfigurator(setup, out var options);
-            services.Configure(setup ?? (o =>
+            services.TryConfigure(setup ?? (o =>
             {
                 o.Settings = options.Settings;
                 o.SensitivityDetails = options.SensitivityDetails;
