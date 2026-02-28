@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Codebelt.Extensions.Newtonsoft.Json.Formatters;
 using Codebelt.Extensions.Xunit;
 using Codebelt.Extensions.Xunit.Hosting.AspNetCore;
 using Cuemon.AspNetCore.Authentication.Basic;
@@ -16,6 +18,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using Xunit;
 
@@ -301,6 +304,78 @@ namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Formatters
                                  """.ReplaceLineEndings(), content.ReplaceLineEndings());
                 }
             }
+        }
+
+        [Fact]
+        public void AddNewtonsoftJsonFormatterOptions_ShouldThrowArgumentNullException_WhenServicesIsNull()
+        {
+            IServiceCollection services = null;
+
+            var sut = Assert.Throws<ArgumentNullException>(() => services.AddNewtonsoftJsonFormatterOptions());
+
+            Assert.Equal("services", sut.ParamName);
+        }
+
+        [Fact]
+        public void AddNewtonsoftJsonFormatterOptions_ShouldRegisterOptionsWithDefaultValues()
+        {
+            var services = new ServiceCollection();
+            services.AddNewtonsoftJsonFormatterOptions();
+
+            var sp = services.BuildServiceProvider();
+            var options = sp.GetRequiredService<IOptions<NewtonsoftJsonFormatterOptions>>();
+
+            Assert.NotNull(options.Value.Settings);
+            Assert.NotNull(options.Value.SupportedMediaTypes);
+            Assert.Equal(FaultSensitivityDetails.None, options.Value.SensitivityDetails);
+            Assert.False(options.Value.SynchronizeWithJsonConvert);
+        }
+
+        [Fact]
+        public void AddNewtonsoftJsonFormatterOptions_ShouldApplySetupConfiguration()
+        {
+            var services = new ServiceCollection();
+            services.AddNewtonsoftJsonFormatterOptions(o => o.SensitivityDetails = FaultSensitivityDetails.All);
+
+            var sp = services.BuildServiceProvider();
+            var options = sp.GetRequiredService<IOptions<NewtonsoftJsonFormatterOptions>>();
+
+            Assert.Equal(FaultSensitivityDetails.All, options.Value.SensitivityDetails);
+        }
+
+        [Fact]
+        public void AddNewtonsoftJsonFormatterOptions_ShouldOnlyRegisterOnce_WhenCalledMultipleTimes()
+        {
+            var services = new ServiceCollection();
+            services.AddNewtonsoftJsonFormatterOptions(o => o.SensitivityDetails = FaultSensitivityDetails.All);
+            services.AddNewtonsoftJsonFormatterOptions(o => o.SensitivityDetails = FaultSensitivityDetails.Evidence);
+
+            var count = services.Count(s => s.ServiceType == typeof(IConfigureOptions<NewtonsoftJsonFormatterOptions>));
+
+            Assert.Equal(1, count);
+        }
+
+        [Fact]
+        public void AddNewtonsoftJsonExceptionResponseFormatter_ShouldThrowArgumentNullException_WhenServicesIsNull()
+        {
+            IServiceCollection services = null;
+
+            var sut = Assert.Throws<ArgumentNullException>(() => services.AddNewtonsoftJsonExceptionResponseFormatter());
+
+            Assert.Equal("services", sut.ParamName);
+        }
+
+        [Fact]
+        public void AddNewtonsoftJsonExceptionResponseFormatter_ShouldRegisterFormatter()
+        {
+            var services = new ServiceCollection();
+            services.AddFaultDescriptorOptions();
+            services.AddNewtonsoftJsonExceptionResponseFormatter();
+
+            var sp = services.BuildServiceProvider();
+            var formatter = sp.GetService<HttpExceptionDescriptorResponseFormatter<NewtonsoftJsonFormatterOptions>>();
+
+            Assert.NotNull(formatter);
         }
 
     }

@@ -7,9 +7,21 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Newtonsoft.Json, Cuemon.Extensions.AspNetCore.Newtonsoft.Json and Cuemon.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.
 
-## [10.0.4] - 2026-02-28
+## [10.1.0] - 2026-02-28
 
-This is a service update that focuses on package dependencies.
+This is a minor release that improves minimal API formatter integration, while also tightening option registration behavior across ASP.NET Core formatter setup.
+
+### Added
+
+- `ServiceCollectionExtensions` class in the Codebelt.Extensions.AspNetCore.Newtonsoft.Json namespace was extended with a new method: `AddMinimalNewtonsoftJsonOptions`.
+
+### Changed
+
+- `ServiceCollectionExtensions` class in the Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Formatters namespace to use TryConfigure in `AddNewtonsoftJsonFormatterOptions`.
+
+### Fixed
+
+- Prevented repeated `IConfigureOptions<TOptions>` registrations when formatter/options extension methods are called multiple times.
 
 ## [10.0.3] - 2026-02-20
 
