@@ -7,9 +7,17 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Newtonsoft.Json, Cuemon.Extensions.AspNetCore.Newtonsoft.Json and Cuemon.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.
 
-## [10.1.1] - 2026-03-18
+## [10.1.1] - 2026-03-23
 
-This is a service update that focuses on package dependencies.
+This is a patch release focused on dependency updates, build system improvements, and test infrastructure enhancements.
+
+### Changed
+
+- Dependencies upgraded to latest compatible versions: Microsoft.AspNetCore.Mvc.NewtonsoftJson (9.0.14 for net9, 10.0.5 for net10), coverlet.collector (8.0.1), and coverlet.msbuild (8.0.1),
+- Build process refactored to use System.IO.File.ReadAllText for improved PackageReleaseNotes handling,
+- Service update workflow improved with fixed line-ending handling in PackageReleaseNotes generation,
+- Test environment configuration expanded to explicitly support .NET 9 and .NET 10 Docker test runners,
+- Bump-nuget script extended with support for Carter package mapping.
 
 ## [10.1.0] - 2026-02-28
 
