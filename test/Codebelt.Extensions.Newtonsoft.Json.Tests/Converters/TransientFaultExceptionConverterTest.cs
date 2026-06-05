@@ -137,7 +137,6 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
         [Fact]
         public void ReadJson_ShouldDeserializeTransientFaultException_WithEvidence()
         {
-            // First serialize with evidence, then deserialize to test the evidence parsing path
             var inner = new ArgumentException("inner error");
             var original = new TransientFaultException("Transient fault", inner, CreateEvidence());
 
@@ -147,14 +146,30 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
                 o.Settings.Converters.AddExceptionConverter(false, false);
             });
 
-            // Serialize
             var stream = formatter.Serialize(original, typeof(TransientFaultException));
             var json = new StreamReader(stream).ReadToEnd();
 
             TestOutput.WriteLine(json);
 
-            // The JSON should contain evidence section for TransientFaultException
             Assert.Contains("transientFaultException", json, StringComparison.OrdinalIgnoreCase);
+
+            stream.Position = 0;
+            var result = formatter.Deserialize(stream, typeof(TransientFaultException)) as TransientFaultException;
+
+            Assert.NotNull(result);
+            Assert.Equal("Transient fault", result.Message);
+            Assert.NotNull(result.InnerException);
+            Assert.IsType<ArgumentException>(result.InnerException);
+            Assert.Equal("inner error", result.InnerException.Message);
+
+            var evidence = result.Evidence;
+            Assert.NotNull(evidence);
+            Assert.Equal(3, evidence.Attempts);
+            Assert.Equal(TimeSpan.FromMilliseconds(100), evidence.RecoveryWaitTime);
+            Assert.Equal(TimeSpan.FromMilliseconds(300), evidence.TotalRecoveryWaitTime);
+            Assert.Equal(TimeSpan.FromMilliseconds(50), evidence.Latency);
+            Assert.Equal("TestCaller", evidence.Descriptor.Caller);
+            Assert.Equal("TestMethod", evidence.Descriptor.MethodName);
         }
     }
 }
