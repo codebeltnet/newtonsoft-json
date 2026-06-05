@@ -52,6 +52,9 @@ namespace Codebelt.Extensions.Newtonsoft.Json
 
     internal sealed class DynamicCamelCasePropertyNamesContractResolver : CamelCasePropertyNamesContractResolver
     {
+        private readonly object _contractCacheLock = new();
+        private readonly Dictionary<Type, JsonContract> _contractCache = new();
+
         internal DynamicCamelCasePropertyNamesContractResolver(IEnumerable<Action<PropertyInfo, JsonProperty>> jsonPropertyHandlers)
         {
             JsonPropertyHandlers = jsonPropertyHandlers;
@@ -59,6 +62,22 @@ namespace Codebelt.Extensions.Newtonsoft.Json
         }
 
         private IEnumerable<Action<PropertyInfo, JsonProperty>> JsonPropertyHandlers { get; set; }
+
+        public override JsonContract ResolveContract(Type type)
+        {
+            if (type == null) { throw new ArgumentNullException(nameof(type)); }
+
+            lock (_contractCacheLock)
+            {
+                if (!_contractCache.TryGetValue(type, out var contract))
+                {
+                    contract = CreateContract(type);
+                    _contractCache[type] = contract;
+                }
+
+                return contract;
+            }
+        }
 
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {

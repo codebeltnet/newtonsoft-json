@@ -52,6 +52,28 @@ namespace Codebelt.Extensions.Newtonsoft.Json
         }
 
         [Fact]
+        public void Create_WithHandlers_ShouldApplyHandlersForCamelCaseResolver_WhenContractWasCachedByAnotherResolver()
+        {
+            var cachedResolver = DynamicContractResolver.Create<CamelCasePropertyNamesContractResolver>();
+            var cachedFormatter = new NewtonsoftJsonFormatter(o =>
+            {
+                o.Settings.ContractResolver = cachedResolver;
+            });
+            cachedFormatter.Serialize(new SampleDto { FirstName = "John", LastName = "Doe" }).ToEncodedString();
+
+            var handlerInvoked = false;
+            var sut = DynamicContractResolver.Create<CamelCasePropertyNamesContractResolver>(
+                (pi, jp) => { handlerInvoked = true; });
+            var formatter = new NewtonsoftJsonFormatter(o =>
+            {
+                o.Settings.ContractResolver = sut;
+            });
+            formatter.Serialize(new SampleDto { FirstName = "Jane", LastName = "Doe" }).ToEncodedString();
+
+            Assert.True(handlerInvoked);
+        }
+
+        [Fact]
         public void Create_WithHandlers_ShouldApplyHandlersForDefaultContractResolver()
         {
             var handlerInvoked = false;
