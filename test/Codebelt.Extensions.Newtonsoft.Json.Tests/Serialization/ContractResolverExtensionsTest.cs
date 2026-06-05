@@ -208,5 +208,28 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Serialization
 }".ReplaceLineEndings(), json);
 #endif
         }
+
+        [Fact]
+        public void ResolveNamingStrategyOrDefault_ShouldReturnCamelCase_WhenContractResolverIsNull()
+        {
+            IContractResolver resolver = null;
+            var result = resolver.ResolveNamingStrategyOrDefault();
+
+            Assert.IsType<CamelCaseNamingStrategy>(result);
+        }
+
+        [Fact]
+        public void ResolveNamingStrategyOrDefault_ShouldReturnCamelCase_ForCustomResolverWithNoNamingStrategy()
+        {
+            var resolver = new CustomContractResolverWithoutNamingStrategy();
+            var result = resolver.ResolveNamingStrategyOrDefault();
+
+            Assert.IsType<CamelCaseNamingStrategy>(result);
+        }
+
+        private class CustomContractResolverWithoutNamingStrategy : IContractResolver
+        {
+            public JsonContract ResolveContract(Type type) => new DefaultContractResolver().ResolveContract(type);
+        }
     }
 }

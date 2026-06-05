@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+using System;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Assets;
 using Codebelt.Extensions.Xunit;
@@ -548,6 +549,20 @@ namespace Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json
                                       """.ReplaceLineEndings(), body.ReplaceLineEndings(), o => o.ThrowOnNoMatch = true));
                     break;
             }
+        }
+
+        [Fact]
+        public void AddNewtonsoftJsonFormatters_ShouldThrowArgumentNullException_WhenBuilderIsNull()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                MvcBuilderExtensions.AddNewtonsoftJsonFormatters(null));
+        }
+
+        [Fact]
+        public void AddNewtonsoftJsonFormattersOptions_ShouldThrowArgumentNullException_WhenBuilderIsNull()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                MvcBuilderExtensions.AddNewtonsoftJsonFormattersOptions(null));
         }
     }
 }
