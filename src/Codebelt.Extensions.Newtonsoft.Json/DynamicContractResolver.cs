@@ -55,18 +55,24 @@ namespace Codebelt.Extensions.Newtonsoft.Json
         private readonly object _contractCacheLock = new();
         private readonly Dictionary<Type, JsonContract> _contractCache = new();
 
-        internal DynamicCamelCasePropertyNamesContractResolver(IEnumerable<Action<PropertyInfo, JsonProperty>> jsonPropertyHandlers)
+        internal DynamicCamelCasePropertyNamesContractResolver(Action<PropertyInfo, JsonProperty>[] jsonPropertyHandlers)
         {
             JsonPropertyHandlers = jsonPropertyHandlers;
+            HasJsonPropertyHandlers = jsonPropertyHandlers?.Length > 0;
             IgnoreSerializableInterface = true;
         }
 
-        private IEnumerable<Action<PropertyInfo, JsonProperty>> JsonPropertyHandlers { get; set; }
+        private Action<PropertyInfo, JsonProperty>[] JsonPropertyHandlers { get; set; }
+
+        private bool HasJsonPropertyHandlers { get; }
 
         public override JsonContract ResolveContract(Type type)
         {
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
 
+            if (!HasJsonPropertyHandlers) { return base.ResolveContract(type); }
+
+            // CamelCasePropertyNamesContractResolver shares contracts across instances; handler-backed resolvers need instance-local contracts.
             lock (_contractCacheLock)
             {
                 if (!_contractCache.TryGetValue(type, out var contract))
