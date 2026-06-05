@@ -9,7 +9,27 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 
 ## [10.1.4] - 2026-06-05
 
-This is a service update that focuses on package dependencies.
+This is a patch release focused on expanding test coverage infrastructure, enhancing CI/CD capabilities, and establishing official guidance for AI agent contributions.
+
+### Added
+
+- AGENTS.md as official repository guidance for AI agents working in this codebase, including project overview, coding standards, test conventions, build & CI practices, and git operation safeguards,
+- .bot/ directory to gitignore to exclude local AI agent ideation material (with allowance for .bot/README.md),
+- Comprehensive unit test suite with new test files to improve code coverage: DynamicContractResolverTest, ExceptionConverterTest, StringFlagsEnumConverterTest, TransientFaultExceptionConverterTest, JDataResultTest, JDataResultExtensionsTest, JsonConverterFactoryTest, JsonSerializerSettingsExtensionsTest, and JsonWriterExtensionsTest.
+
+### Changed
+
+- Copilot instructions expanded with explicit guidelines prohibiting ExcludeFromCodeCoverage attributes across all code paths, emphasizing code refactoring over metrics exclusion,
+- CI pipeline enhanced with optional macOS testing matrix (X64 and ARM64 variants) controlled via workflow_dispatch input,
+- CI pipeline refactored with new test_qualitygate job to orchestrate test result validation and ensure all required test suites complete successfully before downstream quality and deployment jobs,
+- Test coverage expanded with additional test methods across MvcBuilderExtensionsTests, NewtonsoftJsonFormatterTest, ContractResolverExtensionsTest, and ValidatorExtensionsTest,
+- Microsoft.NET.Test.SDK upgraded from 18.5.1 to 18.6.0.
+
+### Fixed
+
+- TransientFaultExceptionConverter class to handle null evidence by providing default initialization,
+- JDataResultExtensions class to prevent null reference exceptions by validating PropertyName before path comparison,
+- Codecov repository reference corrected from 'codebeltnet/newtonsoft' to 'codebeltnet/newtonsoft-json' in CI pipeline.
 
 ## [10.1.3] - 2026-05-22
 
@@ -236,3 +256,14 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - Any types found in the Codebelt.Serialization.Json namespace was merged into the Codebelt.Extensions.Newtonsoft.Json namespace
 - JsonReaderResultExtensions class from the Codebelt.Extensions.Newtonsoft.Json namespace
 - JsonReaderParser class from the Codebelt.Extensions.Newtonsoft.Json namespace
+
+[Unreleased]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.4...HEAD
+[10.1.4]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.3...v10.1.4
+[10.1.3]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.2...v10.1.3
+[10.1.2]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.1...v10.1.2
+[10.1.1]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.0...v10.1.1
+[10.1.0]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.0.3...v10.1.0
+[10.0.3]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.0.2...v10.0.3
+[10.0.2]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.0.1...v10.0.2
+[10.0.1]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.0.0...v10.0.1
+[10.0.0]: https://github.com/codebeltnet/newtonsoft-json/compare/v9.0.8...v10.0.0

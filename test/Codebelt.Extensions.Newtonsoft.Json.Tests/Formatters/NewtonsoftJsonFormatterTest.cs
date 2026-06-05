@@ -7,6 +7,7 @@ using Codebelt.Extensions.Xunit;
 using Cuemon;
 using Cuemon.Diagnostics;
 using Cuemon.Extensions.IO;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Xunit;
 
@@ -141,6 +142,59 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Formatters
                 Assert.Contains("\"Type\": \"System.ArithmeticException\"", x[21]);
 
                 r.Dispose();
+            }
+        }
+
+        [Fact]
+        public void Serialize_ShouldUseJsonConvertDefaultSettings_WhenSynchronizeIsTrue()
+        {
+            var originalSettings = JsonConvert.DefaultSettings;
+            try
+            {
+                var f = new NewtonsoftJsonFormatter(o =>
+                {
+                    o.SynchronizeWithJsonConvert = true;
+                    o.Settings.Formatting = Formatting.Indented;
+                });
+
+                // JsonConvert.DefaultSettings should now be set
+                Assert.NotNull(JsonConvert.DefaultSettings);
+
+                var obj = new { Name = "Test", Value = 42 };
+                var r = f.Serialize(obj);
+                var json = new StreamReader(r).ReadToEnd();
+
+                TestOutput.WriteLine(json);
+
+                Assert.Contains("\"name\":", json);
+            }
+            finally
+            {
+                JsonConvert.DefaultSettings = originalSettings;
+            }
+        }
+
+        [Fact]
+        public void Deserialize_ShouldUseJsonConvertDefaultSettings_WhenSynchronizeIsTrue()
+        {
+            var originalSettings = JsonConvert.DefaultSettings;
+            try
+            {
+                var f = new NewtonsoftJsonFormatter(o =>
+                {
+                    o.SynchronizeWithJsonConvert = true;
+                });
+
+                var json = "\"2022-06-26T22:39:14.3512950Z\"".ToStream();
+                var dt = f.Deserialize<DateTime>(json);
+
+                TestOutput.WriteLine(dt.ToString("O"));
+
+                Assert.Equal(2022, dt.Year);
+            }
+            finally
+            {
+                JsonConvert.DefaultSettings = originalSettings;
             }
         }
     }

@@ -63,6 +63,11 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
                 innerException = converter?.ReadJson(innerExceptionJson.CreateReader(), Formatter.GetType(innerExceptionJson["type"].Value<string>()), existingValue, serializer) as Exception;
             }
 
+            if (evidence == null)
+            {
+                evidence = new TransientFaultEvidence(0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, new MethodSignature(string.Empty, string.Empty, Array.Empty<string>(), Array.Empty<object>()));
+            }
+
             return new TransientFaultException(message, innerException, evidence);
         }
 

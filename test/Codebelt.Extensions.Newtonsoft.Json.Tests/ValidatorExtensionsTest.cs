@@ -41,6 +41,15 @@ namespace Codebelt.Extensions.Newtonsoft.Json
             Validator.ThrowIf.InvalidJsonDocument(ref reader);
         }
 
+        [Fact]
+        public void InvalidJsonDocument_ShouldNotThrow_WhenReaderIsNull()
+        {
+            // The null reader case is a special no-op case
+            JsonReader reader = null;
+            Validator.ThrowIf.InvalidJsonDocument(ref reader);
+            Assert.Null(reader);
+        }
+
         private JsonReader GetJsonReader(string json)
         {
             var sr = new StringReader(json);
