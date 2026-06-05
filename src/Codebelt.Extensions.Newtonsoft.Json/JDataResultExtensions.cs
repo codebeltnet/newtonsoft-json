@@ -44,7 +44,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json
 
             foreach (var jr in source)
             {
-                if (names.Exists(s => s.Equals(jr.Path, StringComparison.OrdinalIgnoreCase)))
+                if (!string.IsNullOrEmpty(jr.PropertyName) && names.Exists(s => s.Equals(jr.Path, StringComparison.OrdinalIgnoreCase)))
                 {
                     partial.Add(jr);
                 }
