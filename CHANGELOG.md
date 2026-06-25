@@ -7,6 +7,10 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Newtonsoft.Json, Cuemon.Extensions.AspNetCore.Newtonsoft.Json and Cuemon.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.
 
+## [10.1.5] - 2026-06-25
+
+This is a service update that focuses on package dependencies.
+
 ## [10.1.4] - 2026-06-05
 
 This is a patch release focused on expanding test coverage infrastructure, enhancing CI/CD capabilities, and establishing official guidance for AI agent contributions.
