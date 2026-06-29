@@ -2,7 +2,7 @@
 uid: Codebelt.Extensions.Newtonsoft.Json.Formatters
 summary: *content
 ---
-The `Codebelt.Extensions.Newtonsoft.Json.Formatters` namespace contains types that are used to serialize and deserialize objects into and from JSON format using a generic signature.
+The `Codebelt.Extensions.Newtonsoft.Json.Formatters` namespace provides `NewtonsoftJsonFormatter`, a stream-based serializer/deserializer that converts objects to and from JSON using Newtonsoft.Json, and `NewtonsoftJsonFormatterOptions` for configuring `JsonSerializerSettings`, supported media types, sensitivity details, and converter collections. Use `NewtonsoftJsonFormatter` when you need JSON serialization with a generic `StreamFormatter<T>` pipeline, such as in ASP.NET Core input/output formatters.
 
 [!INCLUDE [availability-default](../../includes/availability-default.md)]
 
