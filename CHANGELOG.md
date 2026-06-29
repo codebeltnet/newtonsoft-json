@@ -7,9 +7,34 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Newtonsoft.Json, Cuemon.Extensions.AspNetCore.Newtonsoft.Json and Cuemon.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.
 
-## [10.1.5] - 2026-06-25
+## [10.1.5] - 2026-06-30
 
-This is a service update that focuses on package dependencies.
+This is a patch release focused on complete DocFX documentation publishing, agent guidance improvements, package version updates, and CI/CD robustness.
+
+### Added
+
+- Type-specific DocFX documentation pages under `.docfx/api/types/` for all public types, providing usage examples and API guidance,
+- Comprehensive DocFX documentation maintenance standards in AGENTS.md covering namespace pages, type pages, Extension Members tables, example requirements, TFM selection, and verification workflows.
+
+### Changed
+
+- Namespace documentation pages enhanced with improved descriptions and Extension Members tables clarifying public extension methods and their targets,
+- DocFX configuration updated to include type and namespace overwrite files in separate subdirectories as per Keep a Changelog conventions,
+- Package dependencies upgraded:
+  - Codebelt.Extensions.Xunit (11.1.0 → 11.1.1),
+  - Codebelt.Extensions.Xunit.App (11.1.0 → 11.1.1),
+  - Cuemon.AspNetCore.Mvc (10.5.3 → 10.5.4),
+  - Cuemon.Core (10.5.3 → 10.5.4),
+  - Cuemon.Extensions.AspNetCore (10.5.3 → 10.5.4),
+  - Cuemon.Extensions.AspNetCore.Authentication (10.5.3 → 10.5.4),
+  - Cuemon.Extensions.AspNetCore.Mvc (10.5.3 → 10.5.4),
+  - Cuemon.Extensions.Core (10.5.3 → 10.5.4),
+  - Cuemon.Extensions.IO (10.5.3 → 10.5.4),
+  - Cuemon.IO (10.5.3 → 10.5.4),
+  - Microsoft.NET.Test.Sdk (18.6.0 → 18.7.0),
+  - Microsoft.AspNetCore.Mvc.NewtonsoftJson (9.0.16 → 9.0.17 for net9, 10.0.8 → 10.0.9 for net10),
+- CI/CD deployment condition refined to explicitly validate success of all required jobs, preventing skipped optional jobs from suppressing deployment,
+- nginx base image updated to 1.31.2-alpine.
 
 ## [10.1.4] - 2026-06-05
 
@@ -261,7 +286,8 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - JsonReaderResultExtensions class from the Codebelt.Extensions.Newtonsoft.Json namespace
 - JsonReaderParser class from the Codebelt.Extensions.Newtonsoft.Json namespace
 
-[Unreleased]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.4...HEAD
+[Unreleased]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.5...HEAD
+[10.1.5]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.4...v10.1.5
 [10.1.4]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.3...v10.1.4
 [10.1.3]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.2...v10.1.3
 [10.1.2]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.1...v10.1.2
