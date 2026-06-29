@@ -2,13 +2,13 @@
 uid: Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Formatters
 summary: *content
 ---
-The `Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Formatters` namespace contains both types and extension methods that complements the `Cuemon.Extensions.Newtonsoft.Json` namespace while being an addition to the `Microsoft.AspNetCore.Mvc` namespace. Provides JSON formatters for ASP.NET Core that is powered by Newtonsoft.Json.
+The `Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Formatters` namespace registers `NewtonsoftJsonFormatterOptions` and the `IHttpExceptionDescriptorResponseFormatter` into ASP.NET Core's `IServiceCollection`. Start with `AddNewtonsoftJsonExceptionResponseFormatter` on `IServiceCollection` to wire up exception-to-JSON formatting with the response formatter registered; use `AddNewtonsoftJsonFormatterOptions` when you only need the options registered without the response formatter.
 
 [!INCLUDE [availability-modern](../../includes/availability-modern.md)]
 
 Complements: [Codebelt.Extensions.Newtonsoft.Json namespace](/api/extensions/jsonnet/Cuemon.Extensions.Newtonsoft.Json.html) 📘
 
-### Extension Methods
+### Extension Members
 
 |Type|Ext|Methods|
 |--:|:-:|---|
