@@ -42,7 +42,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
         /// <summary>
         /// Writes the JSON representation of the object.
         /// </summary>
-        /// <param name="writer">The <see cref="T:Newtonsoft.Json.JsonWriter" /> to write to.</param>
+        /// <param name="writer">The <see cref="JsonWriter" /> to write to.</param>
         /// <param name="value">The value.</param>
         /// <param name="serializer">The calling serializer.</param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -53,7 +53,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
         /// <summary>
         /// Reads the JSON representation of the object.
         /// </summary>
-        /// <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader" /> to read from.</param>
+        /// <param name="reader">The <see cref="JsonReader" /> to read from.</param>
         /// <param name="objectType">Type of the object.</param>
         /// <param name="existingValue">The existing value of object being read.</param>
         /// <param name="serializer">The calling serializer.</param>
@@ -72,51 +72,59 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
             var blueprints = new List<MemberArgument>();
             while (reader.Read())
             {
-                if (reader.Depth != lastDepth && blueprints.Count > 0)
+                if (ShouldPushBlueprints(reader, lastDepth, blueprints))
                 {
                     stack.Push(blueprints);
                     blueprints = new List<MemberArgument>();
                 }
 
-                switch (reader.TokenType)
-                {
-                    case JsonToken.PropertyName:
-                        string memberName = MapOrDefault(reader.Value!.ToString()!);
-                        if (!reader.Read())
-                        {
-                            // throw
-                        }
-                        var property = properties.SingleOrDefault(pi => pi.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase));
-                        if (property != null)
-                        {
-                            if (property.Name == nameof(Exception.InnerException))
-                            {
-                                blueprints.Add(new MemberArgument(memberName, null));
-                            }
-                            else
-                            {
-                                blueprints.Add(new MemberArgument(memberName, reader.Value));
-                            }
-                        }
-                        else
-                        {
-                            if (memberName.Equals("type", StringComparison.OrdinalIgnoreCase))
-                            {
-                                objectType = Formatter.GetType(reader.Value.ToString());
-                                properties = objectType.GetProperties(MemberReflection.CreateFlags(o => o.ExcludeStatic = true)).ToList();
-                                blueprints.Add(new MemberArgument(memberName, objectType));
-                            }
-                        }
-                        break;
-                    case JsonToken.Comment:
-                        break;
-                    case JsonToken.EndObject:
-                        break;
-                }
+                HandleToken(reader, ref objectType, ref properties, blueprints);
                 lastDepth = reader.Depth;
             }
 
             return stack;
+        }
+
+        private static bool ShouldPushBlueprints(JsonReader reader, int lastDepth, List<MemberArgument> blueprints)
+        {
+            return reader.Depth != lastDepth && blueprints.Count > 0;
+        }
+
+        private static void HandleToken(JsonReader reader, ref Type objectType, ref List<PropertyInfo> properties, List<MemberArgument> blueprints)
+        {
+            if (reader.TokenType != JsonToken.PropertyName) { return; }
+            HandlePropertyName(reader, ref objectType, ref properties, blueprints);
+        }
+
+        private static void HandlePropertyName(JsonReader reader, ref Type objectType, ref List<PropertyInfo> properties, List<MemberArgument> blueprints)
+        {
+            var memberName = MapOrDefault(reader.Value!.ToString()!);
+            if (!reader.Read()) { return; }
+
+            var property = properties.SingleOrDefault(pi => pi.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase));
+            if (property == null)
+            {
+                HandleTypeMember(reader, memberName, ref objectType, ref properties, blueprints);
+                return;
+            }
+
+            blueprints.Add(CreateMemberArgument(reader, memberName, property));
+        }
+
+        private static void HandleTypeMember(JsonReader reader, string memberName, ref Type objectType, ref List<PropertyInfo> properties, List<MemberArgument> blueprints)
+        {
+            if (!memberName.Equals("type", StringComparison.OrdinalIgnoreCase)) { return; }
+
+            objectType = Formatter.GetType(reader.Value.ToString());
+            properties = objectType.GetProperties(MemberReflection.CreateFlags(o => o.ExcludeStatic = true)).ToList();
+            blueprints.Add(new MemberArgument(memberName, objectType));
+        }
+
+        private static MemberArgument CreateMemberArgument(JsonReader reader, string memberName, PropertyInfo property)
+        {
+            return property.Name == nameof(Exception.InnerException)
+                ? new MemberArgument(memberName, null)
+                : new MemberArgument(memberName, reader.Value);
         }
 
         private static string MapOrDefault(string memberName)
