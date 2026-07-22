@@ -39,104 +39,100 @@ namespace Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Converte
                 oome = e;
             }
 
-            using (var middleware = WebHostTestFactory.Create(hostFixture: null))
+            using var middleware = WebHostTestFactory.Create(hostFixture: null);
+            var context = middleware.Host.Services.GetRequiredService<IHttpContextAccessor>().HttpContext;
+            var correlationId = Guid.NewGuid().ToString("N");
+            var requestId = Guid.NewGuid().ToString("N");
+
+            var sut1 = new HttpExceptionDescriptor(oome, message: "Custom non-revealing message.")
             {
-                var context = middleware.Host.Services.GetRequiredService<IHttpContextAccessor>().HttpContext;
-                var correlationId = Guid.NewGuid().ToString("N");
-                var requestId = Guid.NewGuid().ToString("N");
+                CorrelationId = correlationId,
+                RequestId = requestId,
+                HelpLink = new Uri("https://docs.microsoft.com/en-us/dotnet/api/system.outofmemoryexception")
+            };
 
-                var sut1 = new HttpExceptionDescriptor(oome, message: "Custom non-revealing message.")
+            sut1.AddEvidence("Request", context.Request, request => new HttpRequestEvidence(request));
+
+            // TODO: look into IncludeException* and Include equivalents
+
+            var sut2 = new NewtonsoftJsonFormatterOptions()
+            {
+                SensitivityDetails = sensitivityDetails
+            };
+
+            var dc = sut2.Settings.Converters.SingleOrDefault(jc => jc.CanConvert(typeof(HttpExceptionDescriptor)));
+            if (dc != null) { sut2.Settings.Converters.Remove(dc); }
+            sut2.Settings.Converters.AddHttpExceptionDescriptorConverter(o =>
+            {
+                o.SensitivityDetails = sensitivityDetails;
+            });
+
+            Assert.Collection(sut2.Settings.Converters.Where(jc => jc.CanConvert(typeof(HttpExceptionDescriptor))), jc =>
+            {
+                var result = StreamFactory.Create(writer =>
                 {
-                    CorrelationId = correlationId,
-                    RequestId = requestId,
-                    HelpLink = new Uri("https://docs.microsoft.com/en-us/dotnet/api/system.outofmemoryexception")
-                };
-
-                sut1.AddEvidence("Request", context.Request, request => new HttpRequestEvidence(request));
-
-                // TODO: look into IncludeException* and Include equivalents
-
-                var sut2 = new NewtonsoftJsonFormatterOptions()
-                {
-                    SensitivityDetails = sensitivityDetails
-                };
-
-                var dc = sut2.Settings.Converters.SingleOrDefault(jc => jc.CanConvert(typeof(HttpExceptionDescriptor)));
-                if (dc != null) { sut2.Settings.Converters.Remove(dc); }
-                sut2.Settings.Converters.AddHttpExceptionDescriptorConverter(o =>
-                {
-                    o.SensitivityDetails = sensitivityDetails;
+                    var js = JsonSerializer.Create(sut2.Settings);
+                    using var jsonWriter = new JsonTextWriter(writer);
+                    jsonWriter.CloseOutput = false;
+                    js.Serialize(jsonWriter, sut1);
                 });
 
-                Assert.Collection(sut2.Settings.Converters.Where(jc => jc.CanConvert(typeof(HttpExceptionDescriptor))), jc =>
+                var json = result.ToEncodedString();
+
+                Assert.True(jc.CanWrite);
+                Assert.False(jc.CanRead);
+                Assert.True(jc.CanConvert(typeof(HttpExceptionDescriptor)));
+
+                Assert.Contains("\"error\":", json);
+                Assert.Contains("\"status\": 500", json);
+                Assert.Contains("\"code\": \"InternalServerError\"", json);
+                Assert.Contains("\"message\": \"Custom non-revealing message.\"", json);
+                Assert.Contains("\"helpLink\": \"https://docs.microsoft.com/en-us/dotnet/api/system.outofmemoryexception\"", json);
+
+                Assert.Contains($"\"correlationId\": \"{correlationId}\"", json);
+                Assert.Contains($"\"requestId\": \"{requestId}\"", json);
+
+                Condition.FlipFlop(sensitivityDetails.HasFlag(FaultSensitivityDetails.Failure), () =>
                 {
-                    var result = StreamFactory.Create(writer =>
-                    {
-                        var js = JsonSerializer.Create(sut2.Settings);
-                        using (var jsonWriter = new JsonTextWriter(writer))
-                        {
-                            jsonWriter.CloseOutput = false;
-                            js.Serialize(jsonWriter, sut1);
-                        }
-                    });
-
-                    var json = result.ToEncodedString();
-
-                    Assert.True(jc.CanWrite);
-                    Assert.False(jc.CanRead);
-                    Assert.True(jc.CanConvert(typeof(HttpExceptionDescriptor)));
-
-                    Assert.Contains("\"error\":", json);
-                    Assert.Contains("\"status\": 500", json);
-                    Assert.Contains("\"code\": \"InternalServerError\"", json);
-                    Assert.Contains("\"message\": \"Custom non-revealing message.\"", json);
-                    Assert.Contains("\"helpLink\": \"https://docs.microsoft.com/en-us/dotnet/api/system.outofmemoryexception\"", json);
-
-                    Assert.Contains($"\"correlationId\": \"{correlationId}\"", json);
-                    Assert.Contains($"\"requestId\": \"{requestId}\"", json);
-
-                    Condition.FlipFlop(sensitivityDetails.HasFlag(FaultSensitivityDetails.Failure), () =>
-                    {
-                        Assert.Contains("\"failure\":", json);
-                        Assert.Contains("\"type\": \"System.OutOfMemoryException\"", json);
-                        Assert.Contains("\"source\": \"Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Tests\"", json);
-                        Assert.Contains("\"message\": \"Insufficient memory to continue the execution of the program.\"", json);
-                    }, () =>
-                    {
-                        Assert.DoesNotContain("\"failure\":", json);
-                        Assert.DoesNotContain("\"type\": \"System.OutOfMemoryException\"", json);
-                        Assert.DoesNotContain("\"source\": \"Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Tests\"", json);
-                        Assert.DoesNotContain("\"message\": \"Insufficient memory to continue the execution of the program.\"", json);
-                    });
-
-                    Condition.FlipFlop(sensitivityDetails.HasFlag(FaultSensitivityDetails.StackTrace), () =>
-                    {
-                        Assert.Contains("\"stack\":", json);
-                        Assert.Contains("\"at Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Converters.JsonConverterCollectionExtensionsTest.AddHttpExceptionDescriptorConverter_ShouldAddHttpExceptionDescriptorToConverterCollection", json);
-                    }, () =>
-                    {
-                        Assert.DoesNotContain("\"stack\":", json);
-                        Assert.DoesNotContain("\"at Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Converters.JsonConverterCollectionExtensionsTest.AddHttpExceptionDescriptorConverter_ShouldAddHttpExceptionDescriptorToConverterCollection", json);
-                    });
-
-                    Condition.FlipFlop(sensitivityDetails.HasFlag(FaultSensitivityDetails.Evidence), () =>
-                    {
-                        Assert.Contains("\"evidence\":", json);
-                        Assert.Contains("\"request\":", json);
-                        Assert.Contains("\"location\": \"http:///\"", json);
-                        Assert.Contains("\"method\": \"GET\"", json);
-                        Assert.Contains("\"headers\":", json);
-                        Assert.Contains("\"query\":", json);
-                        Assert.Contains("\"cookies\":", json);
-                        Assert.Contains("\"body\":", json);
-                    }, () =>
-                    {
-                        Assert.DoesNotContain("\"evidence\":", json);
-                    });
-
-                    TestOutput.WriteLine(json);
+                    Assert.Contains("\"failure\":", json);
+                    Assert.Contains("\"type\": \"System.OutOfMemoryException\"", json);
+                    Assert.Contains("\"source\": \"Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Tests\"", json);
+                    Assert.Contains("\"message\": \"Insufficient memory to continue the execution of the program.\"", json);
+                }, () =>
+                {
+                    Assert.DoesNotContain("\"failure\":", json);
+                    Assert.DoesNotContain("\"type\": \"System.OutOfMemoryException\"", json);
+                    Assert.DoesNotContain("\"source\": \"Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Tests\"", json);
+                    Assert.DoesNotContain("\"message\": \"Insufficient memory to continue the execution of the program.\"", json);
                 });
-            }
+
+                Condition.FlipFlop(sensitivityDetails.HasFlag(FaultSensitivityDetails.StackTrace), () =>
+                {
+                    Assert.Contains("\"stack\":", json);
+                    Assert.Contains("\"at Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Converters.JsonConverterCollectionExtensionsTest.AddHttpExceptionDescriptorConverter_ShouldAddHttpExceptionDescriptorToConverterCollection", json);
+                }, () =>
+                {
+                    Assert.DoesNotContain("\"stack\":", json);
+                    Assert.DoesNotContain("\"at Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Converters.JsonConverterCollectionExtensionsTest.AddHttpExceptionDescriptorConverter_ShouldAddHttpExceptionDescriptorToConverterCollection", json);
+                });
+
+                Condition.FlipFlop(sensitivityDetails.HasFlag(FaultSensitivityDetails.Evidence), () =>
+                {
+                    Assert.Contains("\"evidence\":", json);
+                    Assert.Contains("\"request\":", json);
+                    Assert.Contains("\"location\": \"http:///\"", json);
+                    Assert.Contains("\"method\": \"GET\"", json);
+                    Assert.Contains("\"headers\":", json);
+                    Assert.Contains("\"query\":", json);
+                    Assert.Contains("\"cookies\":", json);
+                    Assert.Contains("\"body\":", json);
+                }, () =>
+                {
+                    Assert.DoesNotContain("\"evidence\":", json);
+                });
+
+                TestOutput.WriteLine(json);
+            });
         }
 
         [Fact]
@@ -155,11 +151,9 @@ namespace Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.Converte
                 var result = StreamFactory.Create(writer =>
                 {
                     var js = JsonSerializer.Create(sut2.Settings);
-                    using (var jsonWriter = new JsonTextWriter(writer))
-                    {
-                        jsonWriter.CloseOutput = false;
-                        js.Serialize(jsonWriter, sut1);
-                    }
+                    using var jsonWriter = new JsonTextWriter(writer);
+                    jsonWriter.CloseOutput = false;
+                    js.Serialize(jsonWriter, sut1);
                 });
 
                 var json = result.ToEncodedString();

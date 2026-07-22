@@ -89,7 +89,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json
 
         private static bool HasMatchWithAsterisk(string s, string path)
         {
-            return s.EndsWith("*", StringComparison.Ordinal) &&
+            return s.Length > 0 && s[s.Length - 1] == '*' &&
                    path.Contains('.') &&
                    s.Remove(s.LastIndexOf('.')).Equals(path.Remove(path.LastIndexOf('.')), StringComparison.Ordinal);
         }

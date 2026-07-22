@@ -18,7 +18,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
         /// <summary>
         /// Adds an <see cref="Enum"/> JSON converter to the list.
         /// </summary>
-        /// <param name="converters">The <see cref="T:ICollection{JsonConverter}" /> to extend.</param>
+        /// <param name="converters">The <see cref="ICollection{JsonConverter}" /> to extend.</param>
         /// <param name="ns">The optional <see cref="NamingStrategy"/> to apply.</param>
         /// <returns>A reference to <paramref name="converters"/> after the operation has completed.</returns>
         public static ICollection<JsonConverter> AddStringEnumConverter(this ICollection<JsonConverter> converters, NamingStrategy ns = null)
@@ -30,7 +30,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
         /// <summary>
         /// Adds a combined <see cref="Enum" /> and <see cref="FlagsAttribute" /> JSON converter to the list.
         /// </summary>
-        /// <param name="converters">The <see cref="T:ICollection{JsonConverter}" /> to extend.</param>
+        /// <param name="converters">The <see cref="ICollection{JsonConverter}" /> to extend.</param>
         /// <param name="ns">The optional <see cref="NamingStrategy"/> to apply.</param>
         /// <returns>A reference to <paramref name="converters" /> after the operation has completed.</returns>
         public static ICollection<JsonConverter> AddStringFlagsEnumConverter(this ICollection<JsonConverter> converters, NamingStrategy ns = null)
@@ -42,7 +42,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
         /// <summary>
         /// Adds an <see cref="ExceptionDescriptor" /> JSON converter to the list.
         /// </summary>
-        /// <param name="converters">The <see cref="T:ICollection{JsonConverter}" /> to extend.</param>
+        /// <param name="converters">The <see cref="ICollection{JsonConverter}" /> to extend.</param>
         /// <param name="setup">The <see cref="ExceptionDescriptorOptions" /> which may be configured.</param>
         /// <param name="afterWriteErrorStartObject">The delegate that is invoked just after writing JSON start object (<c>Error</c>).</param>
         /// <param name="beforeWriteEndObject">The delegate that is invoked just before writing the JSON end object.</param>
@@ -91,7 +91,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
         /// <summary>
         /// Adds an <see cref="Exception" /> JSON converter to the list.
         /// </summary>
-        /// <param name="converters">The <see cref="T:ICollection{JsonConverter}" /> to extend.</param>
+        /// <param name="converters">The <see cref="ICollection{JsonConverter}" /> to extend.</param>
         /// <param name="includeStackTrace">The value that determine whether the stack of an exception is included in the converted result.</param>
         /// <param name="includeData">The value that determine whether the data of an exception is included in the converted result.</param>
         /// <returns>A reference to <paramref name="converters"/> after the operation has completed.</returns>
@@ -104,7 +104,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
         /// <summary>
         /// Adds a <see cref="Failure"/> JSON converter to the list.
         /// </summary>
-        /// <param name="converters">The <see cref="T:ICollection{JsonConverter}" /> to extend.</param>
+        /// <param name="converters">The <see cref="ICollection{JsonConverter}" /> to extend.</param>
         /// <returns>A reference to <paramref name="converters"/> after the operation has completed.</returns>
         public static ICollection<JsonConverter> AddFailureConverter(this ICollection<JsonConverter> converters)
         {
@@ -118,7 +118,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
         /// <summary>
         /// Adds an <see cref="TransientFaultException" /> JSON converter to the list.
         /// </summary>
-        /// <param name="converters">The <see cref="T:ICollection{JsonConverter}" /> to extend.</param>
+        /// <param name="converters">The <see cref="ICollection{JsonConverter}" /> to extend.</param>
         /// <returns>A reference to <paramref name="converters"/> after the operation has completed.</returns>
         public static ICollection<JsonConverter> AddTransientFaultExceptionConverter(this ICollection<JsonConverter> converters)
         {
@@ -129,7 +129,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
         /// <summary>
         /// Adds an <see cref="DataPair" /> JSON converter to the list.
         /// </summary>
-        /// <param name="converters">The <see cref="T:ICollection{JsonConverter}" /> to extend.</param>
+        /// <param name="converters">The <see cref="ICollection{JsonConverter}" /> to extend.</param>
         /// <returns>A reference to <paramref name="converters"/> after the operation has completed.</returns>
         public static ICollection<JsonConverter> AddDataPairConverter(this ICollection<JsonConverter> converters)
         {

@@ -148,7 +148,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
         [Fact]
         public void ReadJson_ShouldDeserializeException_RoundTrip()
         {
-            var original = new ArgumentException("Round-trip message");
+            var original = new ArgumentException("Round-trip message", "paramName");
             var sut = new ExceptionConverter();
 
             var json = SerializeException(sut, original);
@@ -163,6 +163,10 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
             var deserialized = serializer.Deserialize(jr, typeof(ArgumentException)) as Exception;
 
             Assert.NotNull(deserialized);
+            var argumentException = Assert.IsType<ArgumentException>(deserialized);
+            Assert.Equal(original.Message, argumentException.Message);
+            Assert.Equal(original.ParamName, argumentException.ParamName);
+            Assert.Null(argumentException.InnerException);
         }
 
         [Fact]
@@ -184,6 +188,11 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
             var deserialized = serializer.Deserialize(jr, typeof(ArgumentException)) as Exception;
 
             Assert.NotNull(deserialized);
+            var argumentException = Assert.IsType<ArgumentException>(deserialized);
+            Assert.Equal(original.Message, argumentException.Message);
+
+            var innerException = Assert.IsType<InvalidOperationException>(argumentException.InnerException);
+            Assert.Equal(inner.Message, innerException.Message);
         }
 
         [Fact]

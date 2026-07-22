@@ -7,6 +7,30 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Newtonsoft.Json, Cuemon.Extensions.AspNetCore.Newtonsoft.Json and Cuemon.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.
 
+## [10.1.6] - 2026-07-23
+
+This is a patch release focused on dependency service updates, tighter source-project build analysis, and maintainability cleanups around ExceptionConverter and modern C# patterns.
+
+### Changed
+
+- Package dependencies upgraded:
+  - Codebelt.Extensions.Xunit (11.1.1 → 11.1.2),
+  - Codebelt.Extensions.Xunit.App (11.1.1 → 11.1.2),
+  - Cuemon.AspNetCore.Mvc (10.5.4 → 10.5.5),
+  - Cuemon.Core (10.5.4 → 10.5.5),
+  - Cuemon.Extensions.AspNetCore (10.5.4 → 10.5.5),
+  - Cuemon.Extensions.AspNetCore.Authentication (10.5.4 → 10.5.5),
+  - Cuemon.Extensions.AspNetCore.Mvc (10.5.4 → 10.5.5),
+  - Cuemon.Extensions.Core (10.5.4 → 10.5.5),
+  - Cuemon.Extensions.IO (10.5.4 → 10.5.5),
+  - Cuemon.IO (10.5.4 → 10.5.5),
+  - Microsoft.NET.Test.Sdk (18.7.0 → 18.8.1),
+- Directory.Build.props now scopes multi-targeting, packaging, and signing to source projects, enables recommended analyzers with style enforcement, and sets MinVerTagPrefix,
+- ExceptionConverter JSON parse path extracted into focused helpers, removing the legacy GlobalSuppressions file that only covered the old monolithic parser,
+- Source and tests modernized to prefer using declarations and ThrowIfNull on supported TFMs, with a direct char compare for trailing-asterisk path matching in JDataResultExtensions,
+- XML cref documentation simplified by dropping redundant `T:` prefixes on generic type references,
+- DocFX nginx base image pin loosened from `1.31.2-alpine` to `1.31-alpine`.
+
 ## [10.1.5] - 2026-06-30
 
 This is a patch release focused on complete DocFX documentation publishing, agent guidance improvements, package version updates, and CI/CD robustness.
@@ -286,7 +310,7 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - JsonReaderResultExtensions class from the Codebelt.Extensions.Newtonsoft.Json namespace
 - JsonReaderParser class from the Codebelt.Extensions.Newtonsoft.Json namespace
 
-[Unreleased]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.5...HEAD
+[10.1.6]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.5...v10.1.6
 [10.1.5]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.4...v10.1.5
 [10.1.4]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.3...v10.1.4
 [10.1.3]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.2...v10.1.3

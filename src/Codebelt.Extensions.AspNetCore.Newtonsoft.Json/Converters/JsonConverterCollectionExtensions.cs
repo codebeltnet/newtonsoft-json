@@ -20,7 +20,7 @@ namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Converters
         /// <summary>
         /// Adds a <see cref="ProblemDetails"/> JSON converter to the list.
         /// </summary>
-        /// <param name="converters">The <see cref="T:ICollection{JsonConverter}" /> to extend.</param>
+        /// <param name="converters">The <see cref="ICollection{JsonConverter}" /> to extend.</param>
         /// <returns>A reference to <paramref name="converters"/> after the operation has completed.</returns>
         public static ICollection<JsonConverter> AddProblemDetailsConverter(this ICollection<JsonConverter> converters)
         {
@@ -74,7 +74,7 @@ namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Converters
         /// <summary>
         /// Adds an <see cref="HttpExceptionDescriptor"/> JSON converter to the list.
         /// </summary>
-        /// <param name="converters">The <see cref="T:ICollection{JsonConverter}" /> to extend.</param>
+        /// <param name="converters">The <see cref="ICollection{JsonConverter}" /> to extend.</param>
         /// <param name="setup">The <see cref="ExceptionDescriptorOptions"/> which may be configured.</param>
         /// <returns>A reference to <paramref name="converters"/> after the operation has completed.</returns>
         public static ICollection<JsonConverter> AddHttpExceptionDescriptorConverter(this ICollection<JsonConverter> converters, Action<ExceptionDescriptorOptions> setup = null)
@@ -112,7 +112,7 @@ namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Converters
         /// <summary>
         /// Adds an <see cref="StringValues"/> JSON converter to the list.
         /// </summary>
-        /// <param name="converters">The <see cref="T:ICollection{JsonConverter}" /> to extend.</param>
+        /// <param name="converters">The <see cref="ICollection{JsonConverter}" /> to extend.</param>
         /// <returns>A reference to <paramref name="converters"/> after the operation has completed.</returns>
         public static ICollection<JsonConverter> AddStringValuesConverter(this ICollection<JsonConverter> converters)
         {

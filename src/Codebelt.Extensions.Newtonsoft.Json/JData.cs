@@ -14,47 +14,39 @@ namespace Codebelt.Extensions.Newtonsoft.Json
     public class JData
     {
         /// <summary>
-        /// Creates a sequence of <see cref="T:IEnumerable{JDataResult}"/> from the specified <paramref name="json"/>.
+        /// Creates a sequence of <see cref="IEnumerable{JDataResult}"/> from the specified <paramref name="json"/>.
         /// </summary>
         /// <param name="json">A <see cref="Stream"/> that represents a JSON data structure.</param>
         /// <param name="setup">The <see cref="StreamReaderOptions" /> which may be configured.</param>
-        /// <returns>An <see cref="T:IEnumerable{JDataResult}"/> sequence from the specified <see cref="Stream"/>.</returns>
+        /// <returns>An <see cref="IEnumerable{JDataResult}"/> sequence from the specified <see cref="Stream"/>.</returns>
         public static IEnumerable<JDataResult> ReadAll(Stream json, Action<StreamReaderOptions> setup = null)
         {
             Validator.ThrowIfNull(json);
             var options = Patterns.Configure(setup);
-            using (var sr = new StreamReader(json, options.Encoding, false, options.BufferSize, options.LeaveOpen))
-            {
-                using (var jr = new JsonTextReader(sr))
-                {
-                    jr.CloseInput = !options.LeaveOpen;
-                    return ReadAll(jr);
-                }
-            }
+            using var sr = new StreamReader(json, options.Encoding, false, options.BufferSize, options.LeaveOpen);
+            using var jr = new JsonTextReader(sr);
+            jr.CloseInput = !options.LeaveOpen;
+            return ReadAll(jr);
         }
 
         /// <summary>
-        /// Creates a sequence of <see cref="T:IEnumerable{JDataResult}"/> from the specified <paramref name="json"/>.
+        /// Creates a sequence of <see cref="IEnumerable{JDataResult}"/> from the specified <paramref name="json"/>.
         /// </summary>
         /// <param name="json">A <see cref="string"/> that represents a JSON data structure.</param>
-        /// <returns>An <see cref="T:IEnumerable{JDataResult}"/> sequence from the specified <see cref="string"/>.</returns>
+        /// <returns>An <see cref="IEnumerable{JDataResult}"/> sequence from the specified <see cref="string"/>.</returns>
         public static IEnumerable<JDataResult> ReadAll(string json)
         {
             Validator.ThrowIfNullOrWhitespace(json);
-            using (var sr = new StringReader(json))
-            {
-                using (var jr = new JsonTextReader(sr))
-                {
-                    return ReadAll(jr);
-                }
-            }
+            using var sr = new StringReader(json);
+            using var jr = new JsonTextReader(sr);
+            return ReadAll(jr);
         }
 
         /// <summary>
-        /// Creates a sequence of <see cref="T:IEnumerable{JDataResult}"/> from the specified <paramref name="reader"/>.
+        /// Creates a sequence of <see cref="IEnumerable{JDataResult}"/> from the specified <paramref name="reader"/>.
         /// </summary>
-        /// <param name="reader">The <see cref="JsonReader"/> to parse and extract an <see cref="T:IEnumerable{JDataResult}"/> sequence from.</param>
-        /// <returns>An <see cref="T:IEnumerable{JDataResult}"/> sequence from the specified <see cref="JsonReader"/>.</returns>
+        /// <param name="reader">The <see cref="JsonReader"/> to parse and extract an <see cref="IEnumerable{JDataResult}"/> sequence from.</param>
+        /// <returns>An <see cref="IEnumerable{JDataResult}"/> sequence from the specified <see cref="JsonReader"/>.</returns>
         public static IEnumerable<JDataResult> ReadAll(JsonReader reader)
         {
             Validator.ThrowIfNull(reader);

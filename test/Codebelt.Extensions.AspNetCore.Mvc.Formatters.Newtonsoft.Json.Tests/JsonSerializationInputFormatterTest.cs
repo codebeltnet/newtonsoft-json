@@ -49,39 +49,37 @@ namespace Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json
         [Fact]
         public async Task ReadRequestBodyAsync_ShouldReturnCreated()
         {
-            using (var filter = WebHostTestFactory.Create(services =>
+            using var filter = WebHostTestFactory.Create(services =>
             {
                 services.AddControllers(o => { o.Filters.Add<FaultDescriptorFilter>(); })
                     .AddApplicationPart(typeof(FakeController).Assembly)
                     .AddNewtonsoftJsonFormatters(o => o.Settings.DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffffffK"); // default ISO8601 (ToString("O")
             }, app =>
-                   {
-                       app.UseRouting();
-                       app.UseEndpoints(routes => { routes.MapControllers(); });
-                   }, hostFixture: null))
             {
-                var wf = new WeatherForecast();
-                var formatter = new NewtonsoftJsonFormatter(o =>
-                {
-                    o.Settings.DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffffffK"; // default ISO8601 (ToString("O")
-                    o.Settings.Formatting = Formatting.Indented;
-                });
-                var stream = formatter.Serialize(wf);
-                var client = filter.Host.GetTestClient();
+                app.UseRouting();
+                app.UseEndpoints(routes => { routes.MapControllers(); });
+            }, hostFixture: null);
+            var wf = new WeatherForecast();
+            var formatter = new NewtonsoftJsonFormatter(o =>
+            {
+                o.Settings.DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffffffK"; // default ISO8601 (ToString("O")
+                o.Settings.Formatting = Formatting.Indented;
+            });
+            var stream = formatter.Serialize(wf);
+            var client = filter.Host.GetTestClient();
 
-                var result = await client.PostAsync("/fake", new StringContent(stream.ToEncodedString(o => o.LeaveOpen = true), Encoding.UTF8, "application/json"));
-                var model = await result.Content.ReadAsStringAsync();
+            var result = await client.PostAsync("/fake", new StringContent(stream.ToEncodedString(o => o.LeaveOpen = true), Encoding.UTF8, "application/json"));
+            var model = await result.Content.ReadAsStringAsync();
 
-                TestOutput.WriteLine(stream.ToEncodedString(o => o.LeaveOpen = true));
-                TestOutput.WriteLine("---");
-                TestOutput.WriteLine(model);
+            TestOutput.WriteLine(stream.ToEncodedString(o => o.LeaveOpen = true));
+            TestOutput.WriteLine("---");
+            TestOutput.WriteLine(model);
 
-                Assert.Equal(stream.ToEncodedString(), model, ignoreLineEndingDifferences: true);
+            Assert.Equal(stream.ToEncodedString(), model, ignoreLineEndingDifferences: true);
 
-                Assert.Equal(StatusCodes.Status201Created, (int)result.StatusCode);
-                Assert.Equal(HttpMethod.Post, result.RequestMessage.Method);
-                Assert.Equal(new Uri("http://localhost/fake"), result.RequestMessage.RequestUri);
-            }
+            Assert.Equal(StatusCodes.Status201Created, (int)result.StatusCode);
+            Assert.Equal(HttpMethod.Post, result.RequestMessage.Method);
+            Assert.Equal(new Uri("http://localhost/fake"), result.RequestMessage.RequestUri);
         }
     }
 }

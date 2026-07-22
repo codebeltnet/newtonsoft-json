@@ -46,32 +46,30 @@ namespace Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json
         [Fact]
         public async Task WriteResponseBodyAsync_ShouldReturnOk()
         {
-            using (var filter = WebHostTestFactory.Create(services =>
+            using var filter = WebHostTestFactory.Create(services =>
             {
                 services.AddControllers(o => { o.Filters.Add<FaultDescriptorFilter>(); })
                     .AddApplicationPart(typeof(FakeController).Assembly)
                     .AddNewtonsoftJsonFormatters();
             }, app =>
-                   {
-                       app.UseRouting();
-                       app.UseEndpoints(routes => { routes.MapControllers(); });
-                   }, hostFixture: null))
             {
-                var client = filter.Host.GetTestClient();
+                app.UseRouting();
+                app.UseEndpoints(routes => { routes.MapControllers(); });
+            }, hostFixture: null);
+            var client = filter.Host.GetTestClient();
 
-                var result = await client.GetAsync("/fake");
-                var model = await result.Content.ReadAsStringAsync();
+            var result = await client.GetAsync("/fake");
+            var model = await result.Content.ReadAsStringAsync();
 
-                TestOutput.WriteLine(model);
+            TestOutput.WriteLine(model);
 
-                Assert.Contains("\"date\":", model);
-                Assert.Contains("\"temperatureC\":", model);
-                Assert.Contains("\"temperatureF\":", model);
-                Assert.Contains("\"summary\":", model);
+            Assert.Contains("\"date\":", model);
+            Assert.Contains("\"temperatureC\":", model);
+            Assert.Contains("\"temperatureF\":", model);
+            Assert.Contains("\"summary\":", model);
 
-                Assert.Equal(StatusCodes.Status200OK, (int)result.StatusCode);
-                Assert.Equal(HttpMethod.Get, result.RequestMessage.Method);
-            }
+            Assert.Equal(StatusCodes.Status200OK, (int)result.StatusCode);
+            Assert.Equal(HttpMethod.Get, result.RequestMessage.Method);
         }
     }
 }

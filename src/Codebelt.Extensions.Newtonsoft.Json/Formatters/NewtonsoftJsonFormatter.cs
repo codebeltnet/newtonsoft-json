@@ -53,12 +53,10 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Formatters
             return StreamFactory.Create(writer =>
             {
                 var serializer = Options.SynchronizeWithJsonConvert ? JsonSerializer.CreateDefault() : JsonSerializer.Create(Options.Settings);
-                using (var jsonWriter = new JsonTextWriter(writer))
-                {
-                    jsonWriter.CloseOutput = false;
-                    jsonWriter.Formatting = serializer.Formatting;
-                    serializer.Serialize(jsonWriter, source, objectType);
-                }
+                using var jsonWriter = new JsonTextWriter(writer);
+                jsonWriter.CloseOutput = false;
+                jsonWriter.Formatting = serializer.Formatting;
+                serializer.Serialize(jsonWriter, source, objectType);
             });
         }
 
@@ -74,11 +72,9 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Formatters
             Validator.ThrowIfNull(objectType);
             var serializer = Options.SynchronizeWithJsonConvert ? JsonSerializer.CreateDefault() : JsonSerializer.Create(Options.Settings);
             var sr = new StreamReader(value, true);
-            using (var reader = new JsonTextReader(sr))
-            {
-                reader.CloseInput = false;
-                return serializer.Deserialize(reader, objectType);
-            }
+            using var reader = new JsonTextReader(sr);
+            reader.CloseInput = false;
+            return serializer.Deserialize(reader, objectType);
         }
     }
 }
