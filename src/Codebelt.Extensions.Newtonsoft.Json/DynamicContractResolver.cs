@@ -68,7 +68,11 @@ namespace Codebelt.Extensions.Newtonsoft.Json
 
         public override JsonContract ResolveContract(Type type)
         {
+#if NETSTANDARD2_0
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
+#else
+            ArgumentNullException.ThrowIfNull(type);
+#endif
 
             if (!HasJsonPropertyHandlers) { return base.ResolveContract(type); }
 

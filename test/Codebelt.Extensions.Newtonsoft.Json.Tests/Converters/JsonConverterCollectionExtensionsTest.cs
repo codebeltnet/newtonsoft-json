@@ -32,11 +32,9 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
                 var result = StreamFactory.Create(writer =>
                 {
                     var js = JsonSerializer.Create(sut2.Settings);
-                    using (var jsonWriter = new JsonTextWriter(writer))
-                    {
-                        jsonWriter.CloseOutput = false;
-                        js.Serialize(jsonWriter, sut1);
-                    }
+                    using var jsonWriter = new JsonTextWriter(writer);
+                    jsonWriter.CloseOutput = false;
+                    js.Serialize(jsonWriter, sut1);
                 });
 
                 var json = result.ToEncodedString();
@@ -64,11 +62,9 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
                 var result = StreamFactory.Create(writer =>
                 {
                     var js = JsonSerializer.Create(sut2.Settings);
-                    using (var jsonWriter = new JsonTextWriter(writer))
-                    {
-                        jsonWriter.CloseOutput = false;
-                        js.Serialize(jsonWriter, sut1);
-                    }
+                    using var jsonWriter = new JsonTextWriter(writer);
+                    jsonWriter.CloseOutput = false;
+                    js.Serialize(jsonWriter, sut1);
                 });
 
                 var json = result.ToEncodedString();
@@ -98,11 +94,9 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
                 var result = StreamFactory.Create(writer =>
                 {
                     var js = JsonSerializer.Create(sut2.Settings);
-                    using (var jsonWriter = new JsonTextWriter(writer))
-                    {
-                        jsonWriter.CloseOutput = false;
-                        js.Serialize(jsonWriter, sut1);
-                    }
+                    using var jsonWriter = new JsonTextWriter(writer);
+                    jsonWriter.CloseOutput = false;
+                    js.Serialize(jsonWriter, sut1);
                 });
 
                 var json = result.ToEncodedString();
@@ -129,11 +123,9 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
                 var result = StreamFactory.Create(writer =>
                 {
                     var js = JsonSerializer.Create(sut2.Settings);
-                    using (var jsonWriter = new JsonTextWriter(writer))
-                    {
-                        jsonWriter.CloseOutput = false;
-                        js.Serialize(jsonWriter, sut1);
-                    }
+                    using var jsonWriter = new JsonTextWriter(writer);
+                    jsonWriter.CloseOutput = false;
+                    js.Serialize(jsonWriter, sut1);
                 });
 
                 var json = result.ToEncodedString();
@@ -183,11 +175,9 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
                 var result = StreamFactory.Create(writer =>
                 {
                     var js = JsonSerializer.Create(sut2.Settings);
-                    using (var jsonWriter = new JsonTextWriter(writer))
-                    {
-                        jsonWriter.CloseOutput = false;
-                        js.Serialize(jsonWriter, sut1);
-                    }
+                    using var jsonWriter = new JsonTextWriter(writer);
+                    jsonWriter.CloseOutput = false;
+                    js.Serialize(jsonWriter, sut1);
                 });
 
                 var json = result.ToEncodedString();
@@ -251,11 +241,9 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Converters
                 var result = StreamFactory.Create(writer =>
                 {
                     var js = JsonSerializer.Create(sut2.Settings);
-                    using (var jsonWriter = new JsonTextWriter(writer))
-                    {
-                        jsonWriter.CloseOutput = false;
-                        js.Serialize(jsonWriter, sut1);
-                    }
+                    using var jsonWriter = new JsonTextWriter(writer);
+                    jsonWriter.CloseOutput = false;
+                    js.Serialize(jsonWriter, sut1);
                 });
 
                 var json = result.ToEncodedString();

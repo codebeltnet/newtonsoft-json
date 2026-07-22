@@ -222,87 +222,85 @@ namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Formatters
         [InlineData(FaultSensitivityDetails.None)]
         public async Task AddNewtonsoftJsonExceptionResponseFormatter_AuthorizationResponseHandler_BasicScheme_ShouldRenderResponseInJsonByNewtonsoft_UsingAspNetBootstrapping(FaultSensitivityDetails sensitivityDetails)
         {
-            using (var startup = WebHostTestFactory.Create(services =>
-                   {
-                       services.AddNewtonsoftJsonExceptionResponseFormatter();
-                       services.AddAuthorizationResponseHandler();
-                       services.AddAuthentication(BasicAuthorizationHeader.Scheme)
-                           .AddBasic(o =>
-                           {
-                               o.RequireSecureConnection = false;
-                               o.Authenticator = (username, password) => null;
-                           });
-                       services.AddAuthorization(o =>
-                       {
-                           o.FallbackPolicy = new AuthorizationPolicyBuilder()
-                               .AddAuthenticationSchemes(BasicAuthorizationHeader.Scheme)
-                               .RequireAuthenticatedUser()
-                               .Build();
-
-                       });
-                       services.AddRouting();
-                       services.PostConfigureAllExceptionDescriptorOptions(o => o.SensitivityDetails = sensitivityDetails);
-                   }, app =>
-                   {
-                       app.UseRouting();
-                       app.UseAuthentication();
-                       app.UseAuthorization();
-                       app.UseEndpoints(endpoints =>
-                       {
-                           endpoints.MapGet("/", context => context.Response.WriteAsync($"Hello {context.User.Identity!.Name}"));
-                       });
-                   }, hostFixture: null))
+            using var startup = WebHostTestFactory.Create(services =>
             {
-                var client = startup.Host.GetTestClient();
-                var bb = new BasicAuthorizationHeaderBuilder()
-                    .AddUserName("Agent")
-                    .AddPassword("Test");
-
-                client.DefaultRequestHeaders.Add(HeaderNames.Authorization, bb.Build().ToString());
-                client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
-
-                var result = await client.GetAsync("/");
-                var content = await result.Content.ReadAsStringAsync();
-
-                TestOutput.WriteLine(content);
-
-                Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
-                Assert.Equal("Basic realm=\"AuthenticationServer\"", result.Headers.WwwAuthenticate.ToString());
-                if (sensitivityDetails == FaultSensitivityDetails.All)
+                services.AddNewtonsoftJsonExceptionResponseFormatter();
+                services.AddAuthorizationResponseHandler();
+                services.AddAuthentication(BasicAuthorizationHeader.Scheme)
+                    .AddBasic(o =>
+                    {
+                        o.RequireSecureConnection = false;
+                        o.Authenticator = (username, password) => null;
+                    });
+                services.AddAuthorization(o =>
                 {
-                    Assert.Equal("""
-                                 {
-                                   "error": {
-                                     "status": 401,
-                                     "code": "Unauthorized",
-                                     "message": "The request has not been applied because it lacks valid authentication credentials for the target resource.",
-                                     "failure": {
-                                       "type": "Cuemon.AspNetCore.Http.UnauthorizedException",
-                                       "message": "The request has not been applied because it lacks valid authentication credentials for the target resource.",
-                                       "headers": {},
-                                       "statusCode": 401,
-                                       "reasonPhrase": "Unauthorized",
-                                       "inner": {
-                                         "type": "System.Security.SecurityException",
-                                         "message": "Unable to authenticate Agent."
-                                       }
-                                     }
+                    o.FallbackPolicy = new AuthorizationPolicyBuilder()
+                        .AddAuthenticationSchemes(BasicAuthorizationHeader.Scheme)
+                        .RequireAuthenticatedUser()
+                        .Build();
+
+                });
+                services.AddRouting();
+                services.PostConfigureAllExceptionDescriptorOptions(o => o.SensitivityDetails = sensitivityDetails);
+            }, app =>
+            {
+                app.UseRouting();
+                app.UseAuthentication();
+                app.UseAuthorization();
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapGet("/", context => context.Response.WriteAsync($"Hello {context.User.Identity!.Name}"));
+                });
+            }, hostFixture: null);
+            var client = startup.Host.GetTestClient();
+            var bb = new BasicAuthorizationHeaderBuilder()
+                .AddUserName("Agent")
+                .AddPassword("Test");
+
+            client.DefaultRequestHeaders.Add(HeaderNames.Authorization, bb.Build().ToString());
+            client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+
+            var result = await client.GetAsync("/");
+            var content = await result.Content.ReadAsStringAsync();
+
+            TestOutput.WriteLine(content);
+
+            Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
+            Assert.Equal("Basic realm=\"AuthenticationServer\"", result.Headers.WwwAuthenticate.ToString());
+            if (sensitivityDetails == FaultSensitivityDetails.All)
+            {
+                Assert.Equal("""
+                             {
+                               "error": {
+                                 "status": 401,
+                                 "code": "Unauthorized",
+                                 "message": "The request has not been applied because it lacks valid authentication credentials for the target resource.",
+                                 "failure": {
+                                   "type": "Cuemon.AspNetCore.Http.UnauthorizedException",
+                                   "message": "The request has not been applied because it lacks valid authentication credentials for the target resource.",
+                                   "headers": {},
+                                   "statusCode": 401,
+                                   "reasonPhrase": "Unauthorized",
+                                   "inner": {
+                                     "type": "System.Security.SecurityException",
+                                     "message": "Unable to authenticate Agent."
                                    }
                                  }
-                                 """.ReplaceLineEndings(), content.ReplaceLineEndings());
-                }
-                else
-                {
-                    Assert.Equal("""
-                                 {
-                                   "error": {
-                                     "status": 401,
-                                     "code": "Unauthorized",
-                                     "message": "The request has not been applied because it lacks valid authentication credentials for the target resource."
-                                   }
-                                 }
-                                 """.ReplaceLineEndings(), content.ReplaceLineEndings());
-                }
+                               }
+                             }
+                             """.ReplaceLineEndings(), content.ReplaceLineEndings());
+            }
+            else
+            {
+                Assert.Equal("""
+                             {
+                               "error": {
+                                 "status": 401,
+                                 "code": "Unauthorized",
+                                 "message": "The request has not been applied because it lacks valid authentication credentials for the target resource."
+                               }
+                             }
+                             """.ReplaceLineEndings(), content.ReplaceLineEndings());
             }
         }
 
