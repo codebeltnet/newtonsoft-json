@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <IsTestProject>$(MSBuildProjectName.EndsWith('Tests'))</IsTestProject>
+    <IsBenchmarkProject>$(MSBuildProjectName.EndsWith('Benchmarks'))</IsBenchmarkProject>
+    <IsSourceProject>$(MSBuildProjectDirectory.ToLower().StartsWith('$(MSBuildThisFileDirectory.ToLower())src'))</IsSourceProject>
+    <IsToolingProject>$(MSBuildProjectDirectory.ToLower().StartsWith('$(MSBuildThisFileDirectory.ToLower())tooling'))</IsToolingProject>
     <IsLinux>$([MSBuild]::IsOSPlatform('Linux'))</IsLinux>
     <IsMacOS>$([MSBuild]::IsOSPlatform('OSX'))</IsMacOS>
     <IsWindows>$([MSBuild]::IsOSPlatform('Windows'))</IsWindows>
@@ -16,7 +19,7 @@
     <Deterministic>true</Deterministic>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(IsTestProject)' == 'false'">
+  <PropertyGroup Condition="'$(IsSourceProject)' == 'true'">
     <TargetFrameworks>net10.0;net9.0;netstandard2.0</TargetFrameworks>
     <Copyright>Copyright © Geekle 2024-2026. All rights reserved.</Copyright>
     <Authors>gimlichael</Authors>
@@ -36,7 +39,11 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <SignAssembly Condition="('$(CI)' == 'true' OR '$(IsMainAuthor)' == 'true') AND '$(SkipSignAssembly)' == 'false'">true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)newtonsoft.snk</AssemblyOriginatorKeyFile>
-    <NoWarn>7035,CA2260</NoWarn>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>Recommended</AnalysisMode>
+    <NoWarn>7035,CA2260,S6618</NoWarn>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(NuGetPackageRoot)' != ''">
@@ -65,7 +72,7 @@
     <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
     <SonarQubeExclude>true</SonarQubeExclude>
     <WarningLevel>0</WarningLevel>
-    <AnalysisLevel>none</AnalysisLevel>
+    <AnalysisMode>none</AnalysisMode>
     <NoWarn>NU1701,NETSDK1206</NoWarn>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
