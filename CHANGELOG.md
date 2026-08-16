@@ -7,9 +7,27 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Newtonsoft.Json, Cuemon.Extensions.AspNetCore.Newtonsoft.Json and Cuemon.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.
 
-## [10.1.7] - 2026-08-12
+## [10.1.7] - 2026-08-16
 
-This is a service update that focuses on package dependencies.
+This is a patch release focused on dependency service updates, test infrastructure consolidation, and enhanced API documentation.
+
+### Changed
+
+- Package dependencies upgraded:
+  - Codebelt.Extensions.Xunit (11.1.2 → 11.2.1),
+  - Codebelt.Extensions.Xunit.App (11.1.2 → 11.2.1),
+  - Cuemon.AspNetCore.Mvc (10.5.5 → 10.7.0),
+  - Cuemon.Core (10.5.5 → 10.7.0),
+  - Cuemon.Extensions.AspNetCore (10.5.5 → 10.7.0),
+  - Cuemon.Extensions.AspNetCore.Authentication (10.5.5 → 10.7.0),
+  - Cuemon.Extensions.AspNetCore.Mvc (10.5.5 → 10.7.0),
+  - Cuemon.Extensions.Core (10.5.5 → 10.7.0),
+  - Cuemon.Extensions.IO (10.5.5 → 10.7.0),
+  - Cuemon.IO (10.5.5 → 10.7.0),
+  - Microsoft.NET.Test.Sdk (18.8.1 → 18.9.0),
+  - Microsoft.AspNetCore.Mvc.NewtonsoftJson (9.0.17 → 9.0.19 for net9, 10.0.9 → 10.0.11 for net10),
+- Test environment configuration simplified by consolidating separate Docker test runners for net9 and net10 into unified codebeltnet/ubuntu-testrunner:8-9-10-11 image, ensuring consistent test execution across all supported TFMs,
+- DocFX type documentation enhanced with comprehensive usage examples, demonstrating core capabilities including streaming JSON parsing, formatter integration, converter usage, and configuration patterns for both ASP.NET Core and standalone applications.
 
 ## [10.1.6] - 2026-07-23
 
@@ -314,6 +332,7 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - JsonReaderResultExtensions class from the Codebelt.Extensions.Newtonsoft.Json namespace
 - JsonReaderParser class from the Codebelt.Extensions.Newtonsoft.Json namespace
 
+[10.1.7]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.6...v10.1.7
 [10.1.6]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.5...v10.1.6
 [10.1.5]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.4...v10.1.5
 [10.1.4]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.3...v10.1.4
