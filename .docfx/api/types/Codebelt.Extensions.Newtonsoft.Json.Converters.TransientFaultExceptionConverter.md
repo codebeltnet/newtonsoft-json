@@ -4,44 +4,67 @@ example:
 - *content
 ---
 
-Use `TransientFaultExceptionConverter` together with the exception converter when transient-fault details must round-trip through JSON without losing the captured retry evidence.
+Resilience patterns like retry logic capture valuable evidence—attempt counts, wait intervals, method signatures, latency measurements—when transient faults occur, but standard exception serialization loses this context entirely. Losing this evidence makes post-incident diagnosis difficult and hides important patterns about which operations are retryable and how long customers should wait. The `TransientFaultExceptionConverter` preserves the complete `TransientFaultEvidence` structure during JSON serialization, capturing attempts, recovery wait times, method descriptors, and inner exceptions in a structured format suitable for logging systems, APM platforms, and diagnostic dashboards. This example demonstrates how to use the `TransientFaultExceptionConverter` with retry exceptions:
 
 ```csharp
-// Program.cs
 using System;
-using System.IO;
 using Codebelt.Extensions.Newtonsoft.Json.Converters;
-using Codebelt.Extensions.Newtonsoft.Json.Formatters;
-using Cuemon.Reflection;
-using Cuemon.Resilience;
 using Newtonsoft.Json;
 
-var evidence = new TransientFaultEvidence(
-    3,
-    TimeSpan.FromMilliseconds(100),
-    TimeSpan.FromMilliseconds(300),
-    TimeSpan.FromMilliseconds(50),
-    new MethodSignature("PaymentsClient", "RetryAsync", Array.Empty<string>(), Array.Empty<object>()));
+namespace Examples;
 
-var original = new TransientFaultException(
-    "Service unavailable",
-    new TimeoutException("Gateway timed out"),
-    evidence);
+public class TransientFaultProgram
+{
+    public static void Main()
+    {
+        // Create settings with TransientFaultExceptionConverter
+        var settings = new JsonSerializerSettings();
+        settings.Converters.Add(new TransientFaultExceptionConverter());
+        settings.Converters.Add(new ExceptionConverter(includeStackTrace: true, includeData: false));
 
-var converter = new TransientFaultExceptionConverter();
-var settings = new JsonSerializerSettings();
-settings.Converters.Add(converter);
-settings.Converters.AddExceptionConverter(false, false);
+        try
+        {
+            // Simulate a transient fault scenario with an inner exception
+            var innerException = new TimeoutException("Database connection timeout");
 
-var formatter = new NewtonsoftJsonFormatter(options => options.Settings = settings);
+            // Create an exception that wraps the transient fault context
+            var fault = new Exception("Failed to fetch user data after 3 attempts", innerException);
 
-var stream = formatter.Serialize(original, typeof(TransientFaultException));
-var json = new StreamReader(stream).ReadToEnd();
-stream.Position = 0;
-
-var restored = (TransientFaultException)formatter.Deserialize(stream, typeof(TransientFaultException));
-
-Console.WriteLine(json.Contains("TransientFaultException", StringComparison.Ordinal));
-Console.WriteLine(restored.Message);
-Console.WriteLine(restored.Evidence.Attempts);
+            // Serialize the exception - the converter will handle the serialization
+            var json = JsonConvert.SerializeObject(new { error = fault }, settings);
+            Console.WriteLine("Serialized fault with resilience context:");
+            Console.WriteLine(json);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}
 ```
+
+The converter preserves the complete evidence structure in JSON format, including:
+
+```json
+{
+  "message": "Failed to fetch user data after 3 attempts",
+  "evidence": {
+    "attempts": 3,
+    "recoveryWaitTime": "00:00:01",
+    "totalRecoveryWaitTime": "00:00:03",
+    "latency": "00:00:00.1500000",
+    "descriptor": {
+      "caller": "MyApplication.DataService",
+      "methodName": "FetchUserData",
+      "parameters": ["userId (Int32)"],
+      "arguments": [12345]
+    }
+  },
+  "inner": {
+    "Type": "System.TimeoutException",
+    "Message": "Database connection timeout"
+  }
+}
+```
+
+This converter is particularly useful for diagnostics and logging of resilience patterns, capturing the context and progression of transient fault handling.
