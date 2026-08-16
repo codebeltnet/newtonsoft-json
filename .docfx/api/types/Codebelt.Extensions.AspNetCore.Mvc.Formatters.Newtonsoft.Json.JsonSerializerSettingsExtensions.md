@@ -4,66 +4,76 @@ example:
 - *content
 ---
 
-Use `JsonSerializerSettingsExtensions.Use<T>` when you already have a `JsonSerializerSettings` instance and want to copy a reusable formatter profile into it before MVC applies the settings to input and output formatters.
+API frameworks often define JSON serialization settings in configuration classes but need to propagate those settings to multiple target instances—formatters, exception handlers, response processors—without duplicating configuration logic. Direct property assignment is error-prone and doesn't scale when you have dozens of settings to copy. The `Use<T>` extension method solves this by copying all serialization properties from a configured source type to a target instance, enabling consistent behavior across your entire request/response pipeline. This example demonstrates how to use the `Use<T>` method to apply custom JSON serializer settings to an existing `JsonSerializerSettings` instance:
 
 ```csharp
-// Program.cs
 using System;
 using Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json;
 using Cuemon.Configuration;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
-var target = new JsonSerializerSettings();
+namespace Examples;
 
-target.Use<MvcJsonSerializerSettings>(settings =>
+class CustomSettings : JsonSerializerSettings, IParameterObject
 {
-    settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-});
-
-Console.WriteLine(target.Formatting);
-Console.WriteLine(target.NullValueHandling);
-Console.WriteLine(target.ReferenceLoopHandling);
-Console.WriteLine(target.ContractResolver is CamelCasePropertyNamesContractResolver);
-
-sealed class MvcJsonSerializerSettings : JsonSerializerSettings, IParameterObject
-{
-    public MvcJsonSerializerSettings()
+    public CustomSettings()
     {
         Formatting = Formatting.Indented;
         NullValueHandling = NullValueHandling.Ignore;
-        ContractResolver = new CamelCasePropertyNamesContractResolver();
+    }
+}
+
+class JsonSerializerSettingsExtensionsExample
+{
+    static void Main()
+    {
+        var customSettings = new CustomSettings();
+        var targetSettings = new JsonSerializerSettings();
+        
+        // Use the Use<T> method to copy settings from CustomSettings to target
+        targetSettings.Use<CustomSettings>();
+        
+        Console.WriteLine($"Target settings formatting: {targetSettings.Formatting}");
+        Console.WriteLine($"Settings have been synchronized from CustomSettings");
     }
 }
 ```
 
 ---
-uid: Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.JsonSerializerSettingsExtensions.Use``1(Newtonsoft.Json.JsonSerializerSettings,System.Action{``0})
+uid: Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.JsonSerializerSettingsExtensions.Use
 example:
 - *content
 ---
 
-Call `Use<T>` on the target `JsonSerializerSettings` instance when a formatter profile already captures the JSON conventions you want MVC to reuse.
+ASP.NET Core MVC applications often need to share JSON serialization configuration across multiple components—input formatters, output formatters, exception handlers, and custom serialization points—to maintain consistency. Without a centralized way to propagate settings, developers duplicate configuration code or resort to static global settings that are difficult to test and override. The `Use<T>` extension method enables configuration inheritance by copying all serialization properties from a configured source settings instance to a target instance, supporting optional custom setup delegates that refine settings before application. This pattern simplifies building consistent serialization behavior across your API without duplication. This example demonstrates applying custom settings from a configuration class:
 
 ```csharp
-// Program.cs
 using System;
 using Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json;
 using Cuemon.Configuration;
 using Newtonsoft.Json;
 
-var target = new JsonSerializerSettings();
-target.Use<MvcJsonSerializerSettings>();
+namespace Examples;
 
-Console.WriteLine(target.Formatting);
-Console.WriteLine(target.NullValueHandling);
-
-sealed class MvcJsonSerializerSettings : JsonSerializerSettings, IParameterObject
+class CustomSettings : JsonSerializerSettings, IParameterObject
 {
-    public MvcJsonSerializerSettings()
+    public CustomSettings()
     {
         Formatting = Formatting.Indented;
         NullValueHandling = NullValueHandling.Ignore;
+    }
+}
+
+class UseMethodExample
+{
+    static void Main()
+    {
+        var targetSettings = new JsonSerializerSettings();
+
+        // Use the Use<T> method to copy settings from CustomSettings to target
+        targetSettings.Use<CustomSettings>();
+
+        Console.WriteLine($"Settings have been applied from CustomSettings");
     }
 }
 ```

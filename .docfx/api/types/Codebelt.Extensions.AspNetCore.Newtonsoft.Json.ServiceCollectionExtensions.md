@@ -3,25 +3,31 @@ uid: Codebelt.Extensions.AspNetCore.Newtonsoft.Json.ServiceCollectionExtensions
 example:
 - *content
 ---
-
-`ServiceCollectionExtensions.AddMinimalNewtonsoftJsonOptions` is the shortest path to wire Newtonsoft.Json into ASP.NET Core dependency injection. It registers `NewtonsoftJsonFormatterOptions` and the `IHttpExceptionDescriptorResponseFormatter` in one call.
+ASP.NET Core applications need centralized exception response formatting that respects custom JSON serialization configuration. The `AddMinimalNewtonsoftJsonOptions` method registers an exception response formatter that applies Newtonsoft.Json serialization with configured sensitivity settings, ensuring consistent error responses across both controller-based and minimal API endpoints. This example demonstrates registering exception response formatter options:
 
 ```csharp
-// Program.cs
 using System;
 using Codebelt.Extensions.AspNetCore.Newtonsoft.Json;
-using Codebelt.Extensions.Newtonsoft.Json.Formatters;
+using Cuemon.Diagnostics;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
-var services = new ServiceCollection();
-services.AddMinimalNewtonsoftJsonOptions(o =>
+namespace Examples;
+
+class Program
 {
-    o.Settings.Formatting = Newtonsoft.Json.Formatting.Indented;
-    o.Settings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-});
+    static void Main()
+    {
+        var builder = WebApplication.CreateBuilder();
 
-var provider = services.BuildServiceProvider();
-var options = provider.GetRequiredService<IOptions<NewtonsoftJsonFormatterOptions>>().Value;
-Console.WriteLine(options.Settings.Formatting == Newtonsoft.Json.Formatting.Indented);
+        builder.Services.AddMinimalNewtonsoftJsonOptions(options =>
+        {
+            options.SensitivityDetails = FaultSensitivityDetails.All;
+        });
+
+        var app = builder.Build();
+        Console.WriteLine("Newtonsoft.Json exception response formatter registered");
+        app.Run();
+    }
+}
 ```
