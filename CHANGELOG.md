@@ -7,9 +7,35 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Newtonsoft.Json, Cuemon.Extensions.AspNetCore.Newtonsoft.Json and Cuemon.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.
 
-## [10.1.8] - 2026-09-11
+## [10.1.8] - 2026-09-12
 
-This is a service update that focuses on package dependencies.
+This is a patch release focused on modernizing test infrastructure, standardizing the development environment, and maintaining package compatibility.
+
+### Added
+
+- Development environment configuration files (.editorconfig, .gitattributes, global.json) for standardized Codebelt .NET development setup, ensuring consistent code formatting and git behavior across contributors and CI pipelines.
+
+### Changed
+
+- Test infrastructure replaced coverlet with Microsoft.Testing.Extensions.CodeCoverage, aligning with modern .NET testing standards and the platform's built-in coverage capabilities,
+- Package dependencies upgraded:
+  - Codebelt.Extensions.Xunit (11.2.1 → 12.0.1),
+  - Codebelt.Extensions.Xunit.App (11.2.1 → 12.0.1),
+  - Cuemon.AspNetCore.Mvc (10.7.0 → 10.7.1),
+  - Cuemon.Core (10.7.0 → 10.7.1),
+  - Cuemon.Extensions.AspNetCore (10.7.0 → 10.7.1),
+  - Cuemon.Extensions.AspNetCore.Authentication (10.7.0 → 10.7.1),
+  - Cuemon.Extensions.AspNetCore.Mvc (10.7.0 → 10.7.1),
+  - Cuemon.Extensions.Core (10.7.0 → 10.7.1),
+  - Cuemon.Extensions.IO (10.7.0 → 10.7.1),
+  - Cuemon.IO (10.7.0 → 10.7.1),
+  - xunit.v3 (3.2.2 → 4.0.0),
+  - xunit.v3.runner.console (3.2.2 → 4.0.0),
+  - xunit.runner.visualstudio (3.1.5 → 4.0.0),
+  - MinVer (7.0.0 → 8.0.0),
+  - Microsoft.NET.Test.Sdk (18.9.0 → 18.10.0),
+  - Microsoft.AspNetCore.Mvc.NewtonsoftJson (9.0.19 → 9.0.20 for net9, 10.0.11 → 10.0.12 for net10),
+- Contributing guidelines updated with comprehensive Codebelt-specific instructions covering repository organization, target frameworks, build commands, test execution workflows, package creation, and integration environment setup.
 
 ## [10.1.7] - 2026-08-16
 
@@ -336,6 +362,7 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - JsonReaderResultExtensions class from the Codebelt.Extensions.Newtonsoft.Json namespace
 - JsonReaderParser class from the Codebelt.Extensions.Newtonsoft.Json namespace
 
+[10.1.8]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.7...v10.1.8
 [10.1.7]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.6...v10.1.7
 [10.1.6]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.5...v10.1.6
 [10.1.5]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.4...v10.1.5
