@@ -12,11 +12,12 @@
         }
       ],
       "dest": "api",
+      "memberLayout": "separatePages",
       "filter": "filterConfig.yml",
       "properties": {
         "TargetFramework": "net10.0"
       }
-    },
+    }
   ],
   "build": {
     "xref": [
@@ -65,7 +66,8 @@
     "fileMetadataFiles": [],
     "template": [
       "default",
-      "modern"
+      "modern",
+      "templates/ms-style"
     ],
     "overwrite": [
       {
@@ -84,6 +86,10 @@
     "noLangKeyword": false,
     "keepFileLink": false,
     "cleanupCacheHistory": false,
-    "disableGitFeatures": false
+    "disableGitFeatures": false,
+    "sitemap": {
+      "baseUrl": "https://newtonsoft.codebelt.net/",
+      "changefreq": "monthly"
+    }
   }
 }
