@@ -7,9 +7,31 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Newtonsoft.Json, Cuemon.Extensions.AspNetCore.Newtonsoft.Json and Cuemon.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.
 
-## [10.1.9] - 2026-10-16
+## [10.1.9] - 2026-10-17
 
-This is a service update that focuses on package dependencies.
+This is a patch release that updates dependencies, consolidates agent guidance and revises documentation hosting.
+
+### Added
+
+- Added `nginx.conf` for port 8080, immutable caching of fingerprinted public assets and disabled caching and validators for stable documentation URLs.
+
+### Changed
+
+- Updated `Microsoft.AspNetCore.Mvc.NewtonsoftJson` from 10.0.12 to 10.0.13 under `$(TargetFramework.StartsWith('net10'))`,
+- Updated `Cuemon.AspNetCore.Mvc`, `Cuemon.Core`, `Cuemon.Extensions.AspNetCore`, `Cuemon.Extensions.AspNetCore.Authentication`, `Cuemon.Extensions.AspNetCore.Mvc`, `Cuemon.Extensions.Core`, `Cuemon.Extensions.IO`, `Cuemon.IO` from 10.7.1 to 10.8.1,
+- Updated `Codebelt.Extensions.Xunit`, `Codebelt.Extensions.Xunit.App` from 12.0.1 to 12.0.2,
+- Updated `Microsoft.NET.Test.Sdk` from 18.10.0 to 18.11.0,
+- Updated `Microsoft.Testing.Extensions.CodeCoverage` from 18.11.2 to 18.12.0,
+- Updated `xunit.runner.visualstudio` from 4.0.0 to 4.0.1,
+- Updated `xunit.v3`, `xunit.v3.runner.console` from 4.0.0 to 4.0.2,
+- Updated `Microsoft.AspNetCore.Mvc.NewtonsoftJson` from 9.0.20 to 9.0.21 under `$(TargetFramework.StartsWith('net9'))`,
+- Consolidated the complete test, benchmark and XML documentation guidance in `AGENTS.md`, preserving examples and path scopes and updating guidance links,
+- Configured DocFX for separate member pages, the `templates/ms-style` template and a monthly sitemap; switched documentation containers to `dhi.io/nginx` and the `codebeltnet/docfx:2` builder,
+- Updated the contributor test command to use Microsoft Testing Platform `--project` syntax.
+
+### Fixed
+
+- Removed a trailing comma from the DocFX metadata array so strict JSON parsers can read the configuration.
 
 ## [10.1.8] - 2026-09-12
 
@@ -366,6 +388,7 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - JsonReaderResultExtensions class from the Codebelt.Extensions.Newtonsoft.Json namespace
 - JsonReaderParser class from the Codebelt.Extensions.Newtonsoft.Json namespace
 
+[10.1.9]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.8...v10.1.9
 [10.1.8]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.7...v10.1.8
 [10.1.7]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.6...v10.1.7
 [10.1.6]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.5...v10.1.6
