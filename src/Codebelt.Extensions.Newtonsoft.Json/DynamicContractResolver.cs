@@ -1,102 +1,101 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Codebelt.Extensions.Newtonsoft.Json
+namespace Codebelt.Extensions.Newtonsoft.Json;
+
+/// <summary>
+/// Provides a factory based way to create and wrap an <see cref="IContractResolver"/> implementation.
+/// </summary>
+public static class DynamicContractResolver
 {
     /// <summary>
-    /// Provides a factory based way to create and wrap an <see cref="IContractResolver"/> implementation.
+    /// Creates the specified resolver.
     /// </summary>
-    public static class DynamicContractResolver
+    /// <typeparam name="T">The type that inherits from <see cref="IContractResolver"/>.</typeparam>
+    /// <param name="jsonPropertyHandlers">The array of delegates that will handle custom rules of a <see cref="JsonProperty"/>.</param>
+    /// <returns>An <see cref="IContractResolver"/> implementation of <typeparamref name="T"/>.</returns>
+    public static IContractResolver Create<T>(params Action<PropertyInfo, JsonProperty>[] jsonPropertyHandlers) where T : IContractResolver
     {
-        /// <summary>
-        /// Creates the specified resolver.
-        /// </summary>
-        /// <typeparam name="T">The type that inherits from <see cref="IContractResolver"/>.</typeparam>
-        /// <param name="jsonPropertyHandlers">The array of delegates that will handle custom rules of a <see cref="JsonProperty"/>.</param>
-        /// <returns>An <see cref="IContractResolver"/> implementation of <typeparamref name="T"/>.</returns>
-        public static IContractResolver Create<T>(params Action<PropertyInfo, JsonProperty>[] jsonPropertyHandlers) where T : IContractResolver
+        switch (typeof(T).Name)
         {
-            switch (typeof(T).Name)
-            {
-                case nameof(CamelCasePropertyNamesContractResolver):
-                    return new DynamicCamelCasePropertyNamesContractResolver(jsonPropertyHandlers);
-                default:
-                    return new DynamicDefaultContractResolver(jsonPropertyHandlers);
-            }
+            case nameof(CamelCasePropertyNamesContractResolver):
+                return new DynamicCamelCasePropertyNamesContractResolver(jsonPropertyHandlers);
+            default:
+                return new DynamicDefaultContractResolver(jsonPropertyHandlers);
         }
     }
+}
 
-    internal sealed class DynamicDefaultContractResolver : DefaultContractResolver
+internal sealed class DynamicDefaultContractResolver : DefaultContractResolver
+{
+    internal DynamicDefaultContractResolver(IEnumerable<Action<PropertyInfo, JsonProperty>> jsonPropertyHandlers)
     {
-        internal DynamicDefaultContractResolver(IEnumerable<Action<PropertyInfo, JsonProperty>> jsonPropertyHandlers)
-        {
-            JsonPropertyHandlers = jsonPropertyHandlers;
-            IgnoreSerializableInterface = true;
-        }
-
-        private IEnumerable<Action<PropertyInfo, JsonProperty>> JsonPropertyHandlers { get; set; }
-
-        protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
-        {
-            var property = base.CreateProperty(member, memberSerialization);
-            foreach (var handler in JsonPropertyHandlers)
-            {
-                handler(member as PropertyInfo, property);
-            }
-            return property;
-        }
+        JsonPropertyHandlers = jsonPropertyHandlers;
+        IgnoreSerializableInterface = true;
     }
 
-    internal sealed class DynamicCamelCasePropertyNamesContractResolver : CamelCasePropertyNamesContractResolver
+    private IEnumerable<Action<PropertyInfo, JsonProperty>> JsonPropertyHandlers { get; set; }
+
+    protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
     {
-        private readonly object _contractCacheLock = new();
-        private readonly Dictionary<Type, JsonContract> _contractCache = new();
-
-        internal DynamicCamelCasePropertyNamesContractResolver(Action<PropertyInfo, JsonProperty>[] jsonPropertyHandlers)
+        var property = base.CreateProperty(member, memberSerialization);
+        foreach (var handler in JsonPropertyHandlers)
         {
-            JsonPropertyHandlers = jsonPropertyHandlers;
-            HasJsonPropertyHandlers = jsonPropertyHandlers?.Length > 0;
-            IgnoreSerializableInterface = true;
+            handler(member as PropertyInfo, property);
         }
+        return property;
+    }
+}
 
-        private Action<PropertyInfo, JsonProperty>[] JsonPropertyHandlers { get; set; }
+internal sealed class DynamicCamelCasePropertyNamesContractResolver : CamelCasePropertyNamesContractResolver
+{
+    private readonly object _contractCacheLock = new();
+    private readonly Dictionary<Type, JsonContract> _contractCache = new();
 
-        private bool HasJsonPropertyHandlers { get; }
+    internal DynamicCamelCasePropertyNamesContractResolver(Action<PropertyInfo, JsonProperty>[] jsonPropertyHandlers)
+    {
+        JsonPropertyHandlers = jsonPropertyHandlers;
+        HasJsonPropertyHandlers = jsonPropertyHandlers?.Length > 0;
+        IgnoreSerializableInterface = true;
+    }
 
-        public override JsonContract ResolveContract(Type type)
-        {
+    private Action<PropertyInfo, JsonProperty>[] JsonPropertyHandlers { get; set; }
+
+    private bool HasJsonPropertyHandlers { get; }
+
+    public override JsonContract ResolveContract(Type type)
+    {
 #if NETSTANDARD2_0
-            if (type == null) { throw new ArgumentNullException(nameof(type)); }
+        if (type == null) { throw new ArgumentNullException(nameof(type)); }
 #else
-            ArgumentNullException.ThrowIfNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 #endif
 
-            if (!HasJsonPropertyHandlers) { return base.ResolveContract(type); }
+        if (!HasJsonPropertyHandlers) { return base.ResolveContract(type); }
 
-            // CamelCasePropertyNamesContractResolver shares contracts across instances; handler-backed resolvers need instance-local contracts.
-            lock (_contractCacheLock)
-            {
-                if (!_contractCache.TryGetValue(type, out var contract))
-                {
-                    contract = CreateContract(type);
-                    _contractCache[type] = contract;
-                }
-
-                return contract;
-            }
-        }
-
-        protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+        // CamelCasePropertyNamesContractResolver shares contracts across instances; handler-backed resolvers need instance-local contracts.
+        lock (_contractCacheLock)
         {
-            var property = base.CreateProperty(member, memberSerialization);
-            foreach (var handler in JsonPropertyHandlers)
+            if (!_contractCache.TryGetValue(type, out var contract))
             {
-                handler(member as PropertyInfo, property);
+                contract = CreateContract(type);
+                _contractCache[type] = contract;
             }
-            return property;
+
+            return contract;
         }
+    }
+
+    protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+    {
+        var property = base.CreateProperty(member, memberSerialization);
+        foreach (var handler in JsonPropertyHandlers)
+        {
+            handler(member as PropertyInfo, property);
+        }
+        return property;
     }
 }
