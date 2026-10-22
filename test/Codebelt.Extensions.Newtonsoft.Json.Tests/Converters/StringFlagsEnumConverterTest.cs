@@ -5,178 +5,177 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Xunit;
 
-namespace Codebelt.Extensions.Newtonsoft.Json.Converters
+namespace Codebelt.Extensions.Newtonsoft.Json.Converters;
+
+[Flags]
+internal enum TestFlagsEnum
 {
-    [Flags]
-    internal enum TestFlagsEnum
+    None = 0,
+    Option1 = 1,
+    Option2 = 2,
+    Option3 = 4
+}
+
+internal enum TestNonFlagsEnum
+{
+    Value1 = 1,
+    Value2 = 2,
+    Value3 = 3
+}
+
+public class StringFlagsEnumConverterTest : Test
+{
+    public StringFlagsEnumConverterTest(ITestOutputHelper output) : base(output)
     {
-        None = 0,
-        Option1 = 1,
-        Option2 = 2,
-        Option3 = 4
     }
 
-    internal enum TestNonFlagsEnum
+    [Fact]
+    public void CanConvert_ShouldReturnTrue_ForFlagsEnum()
     {
-        Value1 = 1,
-        Value2 = 2,
-        Value3 = 3
+        var sut = new StringFlagsEnumConverter();
+
+        Assert.True(sut.CanConvert(typeof(TestFlagsEnum)));
     }
 
-    public class StringFlagsEnumConverterTest : Test
+    [Fact]
+    public void CanConvert_ShouldReturnFalse_ForNonFlagsEnum()
     {
-        public StringFlagsEnumConverterTest(ITestOutputHelper output) : base(output)
-        {
-        }
+        var sut = new StringFlagsEnumConverter();
 
-        [Fact]
-        public void CanConvert_ShouldReturnTrue_ForFlagsEnum()
-        {
-            var sut = new StringFlagsEnumConverter();
+        Assert.False(sut.CanConvert(typeof(TestNonFlagsEnum)));
+    }
 
-            Assert.True(sut.CanConvert(typeof(TestFlagsEnum)));
-        }
+    [Fact]
+    public void CanConvert_ShouldReturnFalse_ForNonEnumType()
+    {
+        var sut = new StringFlagsEnumConverter();
 
-        [Fact]
-        public void CanConvert_ShouldReturnFalse_ForNonFlagsEnum()
-        {
-            var sut = new StringFlagsEnumConverter();
+        Assert.False(sut.CanConvert(typeof(string)));
+        Assert.False(sut.CanConvert(typeof(int)));
+    }
 
-            Assert.False(sut.CanConvert(typeof(TestNonFlagsEnum)));
-        }
+    [Fact]
+    public void WriteJson_ShouldWriteArray_ForFlagsEnum()
+    {
+        var value = TestFlagsEnum.Option1 | TestFlagsEnum.Option2;
+        var sut = new StringFlagsEnumConverter();
 
-        [Fact]
-        public void CanConvert_ShouldReturnFalse_ForNonEnumType()
-        {
-            var sut = new StringFlagsEnumConverter();
+        var json = Serialize(sut, value);
 
-            Assert.False(sut.CanConvert(typeof(string)));
-            Assert.False(sut.CanConvert(typeof(int)));
-        }
+        TestOutput.WriteLine(json);
 
-        [Fact]
-        public void WriteJson_ShouldWriteArray_ForFlagsEnum()
-        {
-            var value = TestFlagsEnum.Option1 | TestFlagsEnum.Option2;
-            var sut = new StringFlagsEnumConverter();
+        Assert.Contains("[", json);
+        Assert.Contains("option1", json);
+        Assert.Contains("option2", json);
+        Assert.Contains("]", json);
+    }
 
-            var json = Serialize(sut, value);
+    [Fact]
+    public void WriteJson_ShouldWriteArray_ForFlagsEnum_WithNamingStrategy()
+    {
+        var value = TestFlagsEnum.Option1 | TestFlagsEnum.Option2;
+        var sut = new StringFlagsEnumConverter(new DefaultNamingStrategy());
 
-            TestOutput.WriteLine(json);
+        var json = Serialize(sut, value);
 
-            Assert.Contains("[", json);
-            Assert.Contains("option1", json);
-            Assert.Contains("option2", json);
-            Assert.Contains("]", json);
-        }
+        TestOutput.WriteLine(json);
 
-        [Fact]
-        public void WriteJson_ShouldWriteArray_ForFlagsEnum_WithNamingStrategy()
-        {
-            var value = TestFlagsEnum.Option1 | TestFlagsEnum.Option2;
-            var sut = new StringFlagsEnumConverter(new DefaultNamingStrategy());
+        Assert.Contains("[", json);
+        Assert.Contains("Option1", json);
+        Assert.Contains("Option2", json);
+        Assert.Contains("]", json);
+    }
 
-            var json = Serialize(sut, value);
+    [Fact]
+    public void WriteJson_ShouldWriteSingleValue_ForNonFlagsEnum_WhenCalledDirectly()
+    {
+        var value = TestNonFlagsEnum.Value1;
+        var sut = new StringFlagsEnumConverter();
 
-            TestOutput.WriteLine(json);
+        // The CanConvert returns false for non-flags enums, but WriteJson has this code path.
+        // Call WriteJson directly to exercise the non-flags branch.
+        var settings = new JsonSerializerSettings();
+        var serializer = JsonSerializer.Create(settings);
 
-            Assert.Contains("[", json);
-            Assert.Contains("Option1", json);
-            Assert.Contains("Option2", json);
-            Assert.Contains("]", json);
-        }
+        using var sw = new StringWriter();
+        using var jw = new JsonTextWriter(sw);
+        sut.WriteJson(jw, value, serializer);
+        var json = sw.ToString();
 
-        [Fact]
-        public void WriteJson_ShouldWriteSingleValue_ForNonFlagsEnum_WhenCalledDirectly()
-        {
-            var value = TestNonFlagsEnum.Value1;
-            var sut = new StringFlagsEnumConverter();
+        TestOutput.WriteLine(json);
 
-            // The CanConvert returns false for non-flags enums, but WriteJson has this code path.
-            // Call WriteJson directly to exercise the non-flags branch.
-            var settings = new JsonSerializerSettings();
-            var serializer = JsonSerializer.Create(settings);
+        // Non-flags enum values are serialized as camelCase string names
+        Assert.Equal("\"value1\"", json);
+    }
 
-            using var sw = new StringWriter();
-            using var jw = new JsonTextWriter(sw);
-            sut.WriteJson(jw, value, serializer);
-            var json = sw.ToString();
+    [Fact]
+    public void WriteJson_ShouldWriteNull_WhenValueIsNull()
+    {
+        var sut = new StringFlagsEnumConverter();
 
-            TestOutput.WriteLine(json);
+        // Call WriteJson directly since CanConvert blocks normal serialization path for null
+        var settings = new JsonSerializerSettings();
+        var serializer = JsonSerializer.Create(settings);
 
-            // Non-flags enum values are serialized as camelCase string names
-            Assert.Equal("\"value1\"", json);
-        }
+        using var sw = new StringWriter();
+        using var jw = new JsonTextWriter(sw);
+        sut.WriteJson(jw, null, serializer);
+        var json = sw.ToString();
 
-        [Fact]
-        public void WriteJson_ShouldWriteNull_WhenValueIsNull()
-        {
-            var sut = new StringFlagsEnumConverter();
+        TestOutput.WriteLine(json);
 
-            // Call WriteJson directly since CanConvert blocks normal serialization path for null
-            var settings = new JsonSerializerSettings();
-            var serializer = JsonSerializer.Create(settings);
+        Assert.Equal("null", json);
+    }
 
-            using var sw = new StringWriter();
-            using var jw = new JsonTextWriter(sw);
-            sut.WriteJson(jw, null, serializer);
-            var json = sw.ToString();
+    [Fact]
+    public void ReadJson_ShouldDeserializeFlagsArray()
+    {
+        var sut = new StringFlagsEnumConverter();
+        var settings = new JsonSerializerSettings();
+        settings.Converters.Add(sut);
+        var serializer = JsonSerializer.Create(settings);
 
-            TestOutput.WriteLine(json);
+        var json = "[\"Option1\",\"Option2\"]";
+        using var sr = new StringReader(json);
+        using var jr = new JsonTextReader(sr);
 
-            Assert.Equal("null", json);
-        }
+        var result = serializer.Deserialize(jr, typeof(TestFlagsEnum));
 
-        [Fact]
-        public void ReadJson_ShouldDeserializeFlagsArray()
-        {
-            var sut = new StringFlagsEnumConverter();
-            var settings = new JsonSerializerSettings();
-            settings.Converters.Add(sut);
-            var serializer = JsonSerializer.Create(settings);
+        TestOutput.WriteLine($"Deserialized: {result}");
 
-            var json = "[\"Option1\",\"Option2\"]";
-            using var sr = new StringReader(json);
-            using var jr = new JsonTextReader(sr);
+        var intResult = (int)result;
+        Assert.Equal((int)(TestFlagsEnum.Option1 | TestFlagsEnum.Option2), intResult);
+    }
 
-            var result = serializer.Deserialize(jr, typeof(TestFlagsEnum));
+    [Fact]
+    public void WriteJson_ShouldWriteNumericValue_ForUndefinedEnumValue_WhenCalledDirectly()
+    {
+        var sut = new StringFlagsEnumConverter();
+        var settings = new JsonSerializerSettings();
+        var serializer = JsonSerializer.Create(settings);
 
-            TestOutput.WriteLine($"Deserialized: {result}");
+        using var sw = new StringWriter();
+        using var jw = new JsonTextWriter(sw);
 
-            var intResult = (int)result;
-            Assert.Equal((int)(TestFlagsEnum.Option1 | TestFlagsEnum.Option2), intResult);
-        }
+        // An undefined enum value (e.g., 99) is represented as its number string
+        var undefinedValue = (TestNonFlagsEnum)99;
+        sut.WriteJson(jw, undefinedValue, serializer);
+        var json = sw.ToString();
 
-        [Fact]
-        public void WriteJson_ShouldWriteNumericValue_ForUndefinedEnumValue_WhenCalledDirectly()
-        {
-            var sut = new StringFlagsEnumConverter();
-            var settings = new JsonSerializerSettings();
-            var serializer = JsonSerializer.Create(settings);
+        TestOutput.WriteLine(json);
 
-            using var sw = new StringWriter();
-            using var jw = new JsonTextWriter(sw);
+        // Undefined numeric enum values should be serialized as their numeric representation
+        Assert.Equal("99", json);
+    }
 
-            // An undefined enum value (e.g., 99) is represented as its number string
-            var undefinedValue = (TestNonFlagsEnum)99;
-            sut.WriteJson(jw, undefinedValue, serializer);
-            var json = sw.ToString();
-
-            TestOutput.WriteLine(json);
-
-            // Undefined numeric enum values should be serialized as their numeric representation
-            Assert.Equal("99", json);
-        }
-
-        private static string Serialize(StringFlagsEnumConverter converter, object value)
-        {
-            var settings = new JsonSerializerSettings();
-            settings.Converters.Add(converter);
-            var serializer = JsonSerializer.Create(settings);
-            using var sw = new StringWriter();
-            using var jw = new JsonTextWriter(sw);
-            serializer.Serialize(jw, value);
-            return sw.ToString();
-        }
+    private static string Serialize(StringFlagsEnumConverter converter, object value)
+    {
+        var settings = new JsonSerializerSettings();
+        settings.Converters.Add(converter);
+        var serializer = JsonSerializer.Create(settings);
+        using var sw = new StringWriter();
+        using var jw = new JsonTextWriter(sw);
+        serializer.Serialize(jw, value);
+        return sw.ToString();
     }
 }
