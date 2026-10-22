@@ -7,6 +7,26 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Newtonsoft.Json, Cuemon.Extensions.AspNetCore.Newtonsoft.Json and Cuemon.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.
 
+## [11.0.0] - 2026-11-10
+
+This is a major release that adds .NET 11 as a target framework and drops .NET 9, while converting the source and test code to file-scoped namespaces, updating the CI pipeline and service update workflow, and refreshing the documentation and package release notes for the new support matrix.
+
+### Changed
+
+- Target frameworks in `Directory.Build.props` and the library, application and test projects changed from `net10.0;net9.0` to `net11.0;net10.0`, with `netstandard2.0` retained for the core library and `net48` retained for Windows test runs,
+- `Microsoft.AspNetCore.Mvc.NewtonsoftJson` in `Directory.Packages.props` gained a `net11.0` declaration at 11.0.0-rc.2.26504.105, while its `net10.0` declaration remains at 10.0.13,
+- Codebelt.Coverlet.MTP upgraded from 10.1.0 to 10.1.1,
+- Source and test files converted to file-scoped namespaces and saved without a byte order mark,
+- README, contributor guidance, `AGENTS.md`, DocFX index and availability includes, and NuGet package READMEs updated to the .NET 11 and .NET 10 support matrix,
+- Package release notes for `Codebelt.Extensions.Newtonsoft.Json` and `Codebelt.Extensions.Newtonsoft.Json.App` record the 11.0.0 target framework change,
+- Package release notes for `Codebelt.Extensions.AspNetCore.Newtonsoft.Json` and `Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json` record the 11.0.0 target framework change,
+- Service update workflow derives the next version from the latest stable `vX.Y.Z` Git tag, reuses a pending `TBD` changelog heading and reads the availability text from the DocFX includes,
+- CI pipeline moved Ubuntu jobs from `ubuntu-24.04` to `ubuntu-26.04` (and `ubuntu-24.04-arm` to `ubuntu-26.04-arm`) and passes `include-preview: true` to the reusable build, pack, test, SonarCloud and CodeQL jobs.
+
+### Removed
+
+- .NET 9 (`net9.0`) target framework from the library, application and test projects, together with its `Microsoft.AspNetCore.Mvc.NewtonsoftJson` 9.0.21 declaration.
+
 ## [10.1.9] - 2026-10-17
 
 This is a patch release that updates dependencies, consolidates agent guidance and revises documentation hosting.
@@ -388,6 +408,7 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - JsonReaderResultExtensions class from the Codebelt.Extensions.Newtonsoft.Json namespace
 - JsonReaderParser class from the Codebelt.Extensions.Newtonsoft.Json namespace
 
+[11.0.0]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.9...v11.0.0
 [10.1.9]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.8...v10.1.9
 [10.1.8]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.7...v10.1.8
 [10.1.7]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.6...v10.1.7

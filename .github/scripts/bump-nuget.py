@@ -15,7 +15,7 @@ Behavior:
   - Cuemon.Core: 10.2.1 → 10.3.0  (triggered source, set to given version)
   - Cuemon.Extensions.IO: 10.2.1 → 10.3.0  (triggered source, set to given version)
   - Codebelt.Extensions.BenchmarkDotNet.*: 1.2.3 → <latest from NuGet>  (other Codebelt)
-  - Microsoft.Extensions.Hosting: 9.0.13 → UNCHANGED (not a Codebelt package)
+  - Microsoft.Extensions.Hosting: 10.0.13 → UNCHANGED (not a Codebelt package)
   - BenchmarkDotNet: 0.15.8 → UNCHANGED (not a Codebelt package)
 """
 
