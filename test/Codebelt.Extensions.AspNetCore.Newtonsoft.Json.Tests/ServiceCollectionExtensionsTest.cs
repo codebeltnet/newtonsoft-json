@@ -8,59 +8,58 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Xunit;
 
-namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json
+namespace Codebelt.Extensions.AspNetCore.Newtonsoft.Json;
+
+public class ServiceCollectionExtensionsTest : Test
 {
-    public class ServiceCollectionExtensionsTest : Test
+    public ServiceCollectionExtensionsTest(ITestOutputHelper output) : base(output)
     {
-        public ServiceCollectionExtensionsTest(ITestOutputHelper output) : base(output)
-        {
-        }
+    }
 
-        [Fact]
-        public void AddMinimalNewtonsoftJsonOptions_ShouldThrowArgumentNullException_WhenServicesIsNull()
-        {
-            IServiceCollection services = null;
+    [Fact]
+    public void AddMinimalNewtonsoftJsonOptions_ShouldThrowArgumentNullException_WhenServicesIsNull()
+    {
+        IServiceCollection services = null;
 
-            var sut = Assert.Throws<ArgumentNullException>(() => services.AddMinimalNewtonsoftJsonOptions());
+        var sut = Assert.Throws<ArgumentNullException>(() => services.AddMinimalNewtonsoftJsonOptions());
 
-            Assert.Equal("services", sut.ParamName);
-        }
+        Assert.Equal("services", sut.ParamName);
+    }
 
-        [Fact]
-        public void AddMinimalNewtonsoftJsonOptions_ShouldReturnSameServiceCollection()
-        {
-            var services = new ServiceCollection();
-            services.AddFaultDescriptorOptions();
+    [Fact]
+    public void AddMinimalNewtonsoftJsonOptions_ShouldReturnSameServiceCollection()
+    {
+        var services = new ServiceCollection();
+        services.AddFaultDescriptorOptions();
 
-            var result = services.AddMinimalNewtonsoftJsonOptions();
+        var result = services.AddMinimalNewtonsoftJsonOptions();
 
-            Assert.Same(services, result);
-        }
+        Assert.Same(services, result);
+    }
 
-        [Fact]
-        public void AddMinimalNewtonsoftJsonOptions_ShouldRegisterNewtonsoftJsonExceptionResponseFormatter()
-        {
-            var services = new ServiceCollection();
-            services.AddFaultDescriptorOptions();
-            services.AddMinimalNewtonsoftJsonOptions();
+    [Fact]
+    public void AddMinimalNewtonsoftJsonOptions_ShouldRegisterNewtonsoftJsonExceptionResponseFormatter()
+    {
+        var services = new ServiceCollection();
+        services.AddFaultDescriptorOptions();
+        services.AddMinimalNewtonsoftJsonOptions();
 
-            var sp = services.BuildServiceProvider();
-            var formatter = sp.GetService<HttpExceptionDescriptorResponseFormatter<NewtonsoftJsonFormatterOptions>>();
+        var sp = services.BuildServiceProvider();
+        var formatter = sp.GetService<HttpExceptionDescriptorResponseFormatter<NewtonsoftJsonFormatterOptions>>();
 
-            Assert.NotNull(formatter);
-        }
+        Assert.NotNull(formatter);
+    }
 
-        [Fact]
-        public void AddMinimalNewtonsoftJsonOptions_ShouldConfigureOptions_WhenSetupIsProvided()
-        {
-            var services = new ServiceCollection();
-            services.AddFaultDescriptorOptions();
-            services.AddMinimalNewtonsoftJsonOptions(o => o.SensitivityDetails = FaultSensitivityDetails.All);
+    [Fact]
+    public void AddMinimalNewtonsoftJsonOptions_ShouldConfigureOptions_WhenSetupIsProvided()
+    {
+        var services = new ServiceCollection();
+        services.AddFaultDescriptorOptions();
+        services.AddMinimalNewtonsoftJsonOptions(o => o.SensitivityDetails = FaultSensitivityDetails.All);
 
-            var sp = services.BuildServiceProvider();
-            var options = sp.GetRequiredService<IOptions<NewtonsoftJsonFormatterOptions>>();
+        var sp = services.BuildServiceProvider();
+        var options = sp.GetRequiredService<IOptions<NewtonsoftJsonFormatterOptions>>();
 
-            Assert.Equal(FaultSensitivityDetails.All, options.Value.SensitivityDetails);
-        }
+        Assert.Equal(FaultSensitivityDetails.All, options.Value.SensitivityDetails);
     }
 }

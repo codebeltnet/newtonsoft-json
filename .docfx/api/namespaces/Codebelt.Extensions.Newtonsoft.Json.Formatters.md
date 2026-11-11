@@ -1,4 +1,4 @@
-﻿---
+---
 uid: Codebelt.Extensions.Newtonsoft.Json.Formatters
 summary: *content
 ---

@@ -4,7 +4,7 @@ This document provides guidance for AI agents working in this repository.
 
 ## Project Overview
 
-Codebelt.Extensions.Newtonsoft.Json is a suite of .NET libraries providing uniform, opinionated, and extensible APIs for working with Newtonsoft.Json (JSON.NET). The solution targets .NET 10.0, .NET 9.0, and .NET Standard 2.0. It includes:
+Codebelt.Extensions.Newtonsoft.Json is a suite of .NET libraries providing uniform, opinionated, and extensible APIs for working with Newtonsoft.Json (JSON.NET). The solution targets .NET 11.0, .NET 10.0, and .NET Standard 2.0. It includes:
 
 - **Codebelt.Extensions.Newtonsoft.Json** — Core extensions for JSON serialization, dynamic contracts, and converters.
 - **Codebelt.Extensions.AspNetCore.Newtonsoft.Json** — ASP.NET Core integration with bootstrapping and dependency injection support.

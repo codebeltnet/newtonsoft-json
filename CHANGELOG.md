@@ -4,8 +4,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 For more details, please refer to `PackageReleaseNotes.txt` on a per assembly basis in the `.nuget` folder.
 
-> [!NOTE]  
+> [!NOTE]
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Newtonsoft.Json, Cuemon.Extensions.AspNetCore.Newtonsoft.Json and Cuemon.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.
+
+## [11.0.0] - 2026-11-12
+
+This is a major release that adds .NET 11 targets and removes dedicated .NET 9 targets, updates dependencies and test infrastructure, and changes documentation hosting and release automation.
+
+### Added
+
+- .NET 11 package and test targets, including the `Microsoft.AspNetCore.Mvc.NewtonsoftJson` 11.0.0 declaration for .NET 11,
+- `SonarAnalyzer.CSharp` 10.36.0.15337 as a private build dependency for non-test projects.
+
+### Changed
+
+- Updated `Cuemon.AspNetCore.Mvc`, `Cuemon.Core`, `Cuemon.Extensions.AspNetCore`, `Cuemon.Extensions.AspNetCore.Authentication`, `Cuemon.Extensions.AspNetCore.Mvc`, `Cuemon.Extensions.Core`, `Cuemon.Extensions.IO`, and `Cuemon.IO` from 10.8.1 to 11.0.0,
+- Updated `Codebelt.Extensions.Xunit` and `Codebelt.Extensions.Xunit.App` from 12.0.2 to 13.0.0, `Codebelt.Coverlet.MTP` from 10.1.0 to 11.0.0, `Microsoft.NET.Test.Sdk` from 18.11.0 to 18.12.0, and `Microsoft.Testing.Extensions.HangDump` from 2.5.1 to 2.5.3,
+- Updated `xunit.v3` and `xunit.v3.runner.console` from 4.0.2 to 4.0.3, and the .NET 10 `Microsoft.AspNetCore.Mvc.NewtonsoftJson` declaration from 10.0.13 to 10.0.15,
+- Moved Ubuntu CI jobs to 26.04 and configured separate .NET 10 and .NET 11 Docker test environments,
+- Updated service-update automation to use stable Git tags, preserve planned releases, validate release dates, and read package availability from DocFX includes,
+- Pinned scorecard workflow actions to commit SHAs and updated their versions,
+- Made file-scoped namespaces mandatory and normalized repository text line endings to LF,
+- Changed fingerprinted documentation asset caching to retain successful and 304 responses for one year, use `no-store` for other responses, and disable range requests.
+
+### Removed
+
+- Dedicated .NET 9 package and test targets; the three modern-only packages target .NET 10 and .NET 11, while the core package also retains .NET Standard 2.0,
+- The .NET 9 conditional `Microsoft.AspNetCore.Mvc.NewtonsoftJson` 9.0.21 version declaration; the dependency remains declared for the supported MVC targets.
 
 ## [10.1.9] - 2026-10-17
 
@@ -388,6 +413,7 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - JsonReaderResultExtensions class from the Codebelt.Extensions.Newtonsoft.Json namespace
 - JsonReaderParser class from the Codebelt.Extensions.Newtonsoft.Json namespace
 
+[11.0.0]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.9...v11.0.0
 [10.1.9]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.8...v10.1.9
 [10.1.8]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.7...v10.1.8
 [10.1.7]: https://github.com/codebeltnet/newtonsoft-json/compare/v10.1.6...v10.1.7

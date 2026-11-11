@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Codebelt.Extensions.Newtonsoft.Json.Formatters;
 using Codebelt.Extensions.Xunit;
 using Cuemon.Extensions.IO;
@@ -6,56 +6,56 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Xunit;
 
-namespace Codebelt.Extensions.Newtonsoft.Json.Serialization
+namespace Codebelt.Extensions.Newtonsoft.Json.Serialization;
+
+public class ContractResolverExtensionsTest : Test
 {
-    public class ContractResolverExtensionsTest : Test
+    private readonly JsonConverter _tsConverter = JsonConverterFactory.Create<TimeSpan>((writer, value, serializer) =>
     {
-        private readonly JsonConverter _tsConverter = JsonConverterFactory.Create<TimeSpan>((writer, value, serializer) =>
+        writer.WriteStartObject();
+        writer.WritePropertyName("Ticks", serializer);
+        writer.WriteValue(value.Ticks);
+        writer.WritePropertyName("Days", serializer);
+        writer.WriteValue(value.Days);
+        writer.WritePropertyName("Hours", serializer);
+        writer.WriteValue(value.Hours);
+        writer.WritePropertyName("Minutes", serializer);
+        writer.WriteValue(value.Minutes);
+        writer.WritePropertyName("Seconds", serializer);
+        writer.WriteValue(value.Seconds);
+        writer.WritePropertyName("TotalDays", serializer);
+        writer.WriteValue(value.TotalDays);
+        writer.WritePropertyName("TotalHours", serializer);
+        writer.WriteValue(value.TotalHours);
+        writer.WritePropertyName("TotalMilliseconds", serializer);
+        writer.WriteValue(value.TotalMilliseconds);
+        writer.WritePropertyName("TotalMinutes", serializer);
+        writer.WriteValue(value.TotalMinutes);
+        writer.WritePropertyName("TotalSeconds", serializer);
+        writer.WriteValue(value.TotalSeconds);
+        writer.WriteEndObject();
+    });
+
+    public ContractResolverExtensionsTest(ITestOutputHelper output) : base(output)
+    {
+    }
+
+    [Fact]
+    public void ResolveNamingStrategyOrDefault_ShouldResolveDefaultNamingStrategy()
+    {
+        var sut1 = TimeSpan.MaxValue;
+        var sut2 = new NewtonsoftJsonFormatter(o =>
         {
-            writer.WriteStartObject();
-            writer.WritePropertyName("Ticks", serializer);
-            writer.WriteValue(value.Ticks);
-            writer.WritePropertyName("Days", serializer);
-            writer.WriteValue(value.Days);
-            writer.WritePropertyName("Hours", serializer);
-            writer.WriteValue(value.Hours);
-            writer.WritePropertyName("Minutes", serializer);
-            writer.WriteValue(value.Minutes);
-            writer.WritePropertyName("Seconds", serializer);
-            writer.WriteValue(value.Seconds);
-            writer.WritePropertyName("TotalDays", serializer);
-            writer.WriteValue(value.TotalDays);
-            writer.WritePropertyName("TotalHours", serializer);
-            writer.WriteValue(value.TotalHours);
-            writer.WritePropertyName("TotalMilliseconds", serializer);
-            writer.WriteValue(value.TotalMilliseconds);
-            writer.WritePropertyName("TotalMinutes", serializer);
-            writer.WriteValue(value.TotalMinutes);
-            writer.WritePropertyName("TotalSeconds", serializer);
-            writer.WriteValue(value.TotalSeconds);
-            writer.WriteEndObject();
+            o.Settings.Converters.Add(_tsConverter);
+            o.Settings.ContractResolver = new DefaultContractResolver();
         });
+        var json = sut2.Serialize(sut1).ToEncodedString();
 
-        public ContractResolverExtensionsTest(ITestOutputHelper output) : base(output)
-        {
-        }
+        TestOutput.WriteLine(json);
 
-        [Fact]
-        public void ResolveNamingStrategyOrDefault_ShouldResolveDefaultNamingStrategy()
-        {
-            var sut1 = TimeSpan.MaxValue;
-            var sut2 = new NewtonsoftJsonFormatter(o =>
-            {
-                o.Settings.Converters.Add(_tsConverter);
-                o.Settings.ContractResolver = new DefaultContractResolver();
-            });
-            var json = sut2.Serialize(sut1).ToEncodedString();
-
-            TestOutput.WriteLine(json);
-
-            Assert.IsType<DefaultNamingStrategy>(sut2.Options.Settings.ContractResolver.ResolveNamingStrategyOrDefault());
+        Assert.IsType<DefaultNamingStrategy>(sut2.Options.Settings.ContractResolver.ResolveNamingStrategyOrDefault());
 #if NET48_OR_GREATER
-            Assert.Equal(@"{
+        Assert.Equal(@"{
   ""Ticks"": 9223372036854775807,
   ""Days"": 10675199,
   ""Hours"": 2,
@@ -68,7 +68,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Serialization
   ""TotalSeconds"": 922337203685.47754
 }".ReplaceLineEndings(), json);
 #else
-            Assert.Equal(@"{
+        Assert.Equal(@"{
   ""Ticks"": 9223372036854775807,
   ""Days"": 10675199,
   ""Hours"": 2,
@@ -81,21 +81,21 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Serialization
   ""TotalSeconds"": 922337203685.4775
 }".ReplaceLineEndings(), json);
 #endif
-        }
+    }
 
-        [Fact]
-        public void ResolveNamingStrategyOrDefault_ShouldResolveCamelCaseNamingStrategy()
-        {
-            var sut1 = TimeSpan.MaxValue;
-            var sut2 = new NewtonsoftJsonFormatter(o => o.Settings.Converters.Add(_tsConverter));
-            var json = sut2.Serialize(sut1).ToEncodedString();
+    [Fact]
+    public void ResolveNamingStrategyOrDefault_ShouldResolveCamelCaseNamingStrategy()
+    {
+        var sut1 = TimeSpan.MaxValue;
+        var sut2 = new NewtonsoftJsonFormatter(o => o.Settings.Converters.Add(_tsConverter));
+        var json = sut2.Serialize(sut1).ToEncodedString();
 
-            TestOutput.WriteLine(json);
+        TestOutput.WriteLine(json);
 
-            Assert.IsType<CamelCaseNamingStrategy>(sut2.Options.Settings.ContractResolver.ResolveNamingStrategyOrDefault());
+        Assert.IsType<CamelCaseNamingStrategy>(sut2.Options.Settings.ContractResolver.ResolveNamingStrategyOrDefault());
 
 #if NET48_OR_GREATER
-            Assert.Equal(@"{
+        Assert.Equal(@"{
   ""ticks"": 9223372036854775807,
   ""days"": 10675199,
   ""hours"": 2,
@@ -108,7 +108,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Serialization
   ""totalSeconds"": 922337203685.47754
 }".ReplaceLineEndings(), json);
 #else
-            Assert.Equal(@"{
+        Assert.Equal(@"{
   ""ticks"": 9223372036854775807,
   ""days"": 10675199,
   ""hours"": 2,
@@ -121,24 +121,24 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Serialization
   ""totalSeconds"": 922337203685.4775
 }".ReplaceLineEndings(), json);
 #endif
-        }
+    }
 
-        [Fact]
-        public void ResolveNamingStrategyOrDefault_ShouldResolveSnakeCaseNamingStrategy()
+    [Fact]
+    public void ResolveNamingStrategyOrDefault_ShouldResolveSnakeCaseNamingStrategy()
+    {
+        var sut1 = TimeSpan.MaxValue;
+        var sut2 = new NewtonsoftJsonFormatter(o =>
         {
-            var sut1 = TimeSpan.MaxValue;
-            var sut2 = new NewtonsoftJsonFormatter(o =>
-            {
-                o.Settings.Converters.Add(_tsConverter);
-                o.Settings.ContractResolver = new DefaultContractResolver() { NamingStrategy = new SnakeCaseNamingStrategy() };
-            });
-            var json = sut2.Serialize(sut1).ToEncodedString();
+            o.Settings.Converters.Add(_tsConverter);
+            o.Settings.ContractResolver = new DefaultContractResolver() { NamingStrategy = new SnakeCaseNamingStrategy() };
+        });
+        var json = sut2.Serialize(sut1).ToEncodedString();
 
-            TestOutput.WriteLine(json);
+        TestOutput.WriteLine(json);
 
-            Assert.IsType<SnakeCaseNamingStrategy>(sut2.Options.Settings.ContractResolver.ResolveNamingStrategyOrDefault());
+        Assert.IsType<SnakeCaseNamingStrategy>(sut2.Options.Settings.ContractResolver.ResolveNamingStrategyOrDefault());
 #if NET48_OR_GREATER
-            Assert.Equal(@"{
+        Assert.Equal(@"{
   ""ticks"": 9223372036854775807,
   ""days"": 10675199,
   ""hours"": 2,
@@ -151,7 +151,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Serialization
   ""total_seconds"": 922337203685.47754
 }".ReplaceLineEndings(), json);
 #else
-            Assert.Equal(@"{
+        Assert.Equal(@"{
   ""ticks"": 9223372036854775807,
   ""days"": 10675199,
   ""hours"": 2,
@@ -164,24 +164,24 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Serialization
   ""total_seconds"": 922337203685.4775
 }".ReplaceLineEndings(), json);
 #endif
-        }
+    }
 
-        [Fact]
-        public void ResolveNamingStrategyOrDefault_ShouldResolveKebabCaseNamingStrategy()
+    [Fact]
+    public void ResolveNamingStrategyOrDefault_ShouldResolveKebabCaseNamingStrategy()
+    {
+        var sut1 = TimeSpan.MaxValue;
+        var sut2 = new NewtonsoftJsonFormatter(o =>
         {
-            var sut1 = TimeSpan.MaxValue;
-            var sut2 = new NewtonsoftJsonFormatter(o =>
-            {
-                o.Settings.Converters.Add(_tsConverter);
-                o.Settings.ContractResolver = new DefaultContractResolver() { NamingStrategy = new KebabCaseNamingStrategy() };
-            });
-            var json = sut2.Serialize(sut1).ToEncodedString();
+            o.Settings.Converters.Add(_tsConverter);
+            o.Settings.ContractResolver = new DefaultContractResolver() { NamingStrategy = new KebabCaseNamingStrategy() };
+        });
+        var json = sut2.Serialize(sut1).ToEncodedString();
 
-            TestOutput.WriteLine(json);
+        TestOutput.WriteLine(json);
 
-            Assert.IsType<KebabCaseNamingStrategy>(sut2.Options.Settings.ContractResolver.ResolveNamingStrategyOrDefault());
+        Assert.IsType<KebabCaseNamingStrategy>(sut2.Options.Settings.ContractResolver.ResolveNamingStrategyOrDefault());
 #if NET48_OR_GREATER
-            Assert.Equal(@"{
+        Assert.Equal(@"{
   ""ticks"": 9223372036854775807,
   ""days"": 10675199,
   ""hours"": 2,
@@ -194,7 +194,7 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Serialization
   ""total-seconds"": 922337203685.47754
 }".ReplaceLineEndings(), json);
 #else
-            Assert.Equal(@"{
+        Assert.Equal(@"{
   ""ticks"": 9223372036854775807,
   ""days"": 10675199,
   ""hours"": 2,
@@ -207,29 +207,28 @@ namespace Codebelt.Extensions.Newtonsoft.Json.Serialization
   ""total-seconds"": 922337203685.4775
 }".ReplaceLineEndings(), json);
 #endif
-        }
+    }
 
-        [Fact]
-        public void ResolveNamingStrategyOrDefault_ShouldReturnCamelCase_WhenContractResolverIsNull()
-        {
-            IContractResolver resolver = null;
-            var result = resolver.ResolveNamingStrategyOrDefault();
+    [Fact]
+    public void ResolveNamingStrategyOrDefault_ShouldReturnCamelCase_WhenContractResolverIsNull()
+    {
+        IContractResolver resolver = null;
+        var result = resolver.ResolveNamingStrategyOrDefault();
 
-            Assert.IsType<CamelCaseNamingStrategy>(result);
-        }
+        Assert.IsType<CamelCaseNamingStrategy>(result);
+    }
 
-        [Fact]
-        public void ResolveNamingStrategyOrDefault_ShouldReturnCamelCase_ForCustomResolverWithNoNamingStrategy()
-        {
-            var resolver = new CustomContractResolverWithoutNamingStrategy();
-            var result = resolver.ResolveNamingStrategyOrDefault();
+    [Fact]
+    public void ResolveNamingStrategyOrDefault_ShouldReturnCamelCase_ForCustomResolverWithNoNamingStrategy()
+    {
+        var resolver = new CustomContractResolverWithoutNamingStrategy();
+        var result = resolver.ResolveNamingStrategyOrDefault();
 
-            Assert.IsType<CamelCaseNamingStrategy>(result);
-        }
+        Assert.IsType<CamelCaseNamingStrategy>(result);
+    }
 
-        private class CustomContractResolverWithoutNamingStrategy : IContractResolver
-        {
-            public JsonContract ResolveContract(Type type) => new DefaultContractResolver().ResolveContract(type);
-        }
+    private class CustomContractResolverWithoutNamingStrategy : IContractResolver
+    {
+        public JsonContract ResolveContract(Type type) => new DefaultContractResolver().ResolveContract(type);
     }
 }

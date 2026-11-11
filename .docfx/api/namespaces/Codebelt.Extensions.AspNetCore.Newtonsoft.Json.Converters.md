@@ -1,4 +1,4 @@
-﻿---
+---
 uid: Codebelt.Extensions.AspNetCore.Newtonsoft.Json.Converters
 summary: *content
 ---

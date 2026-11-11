@@ -6,130 +6,129 @@ using Cuemon.Extensions.IO;
 using Newtonsoft.Json.Serialization;
 using Xunit;
 
-namespace Codebelt.Extensions.Newtonsoft.Json
+namespace Codebelt.Extensions.Newtonsoft.Json;
+
+public class DynamicContractResolverTest : Test
 {
-    public class DynamicContractResolverTest : Test
+    public DynamicContractResolverTest(ITestOutputHelper output) : base(output)
     {
-        public DynamicContractResolverTest(ITestOutputHelper output) : base(output)
+    }
+
+    [Fact]
+    public void Create_ShouldReturnCamelCaseResolver_ForCamelCasePropertyNamesContractResolver()
+    {
+        var sut = DynamicContractResolver.Create<CamelCasePropertyNamesContractResolver>();
+
+        Assert.NotNull(sut);
+        Assert.IsAssignableFrom<CamelCasePropertyNamesContractResolver>(sut);
+    }
+
+    [Fact]
+    public void Create_ShouldReturnDefaultContractResolver_ForDefaultContractResolver()
+    {
+        var sut = DynamicContractResolver.Create<DefaultContractResolver>();
+
+        Assert.NotNull(sut);
+        Assert.IsAssignableFrom<DefaultContractResolver>(sut);
+    }
+
+    [Fact]
+    public void Create_WithHandlers_ShouldApplyHandlersForCamelCaseResolver()
+    {
+        var handlerInvoked = false;
+        var sut = DynamicContractResolver.Create<CamelCasePropertyNamesContractResolver>(
+            (pi, jp) => { handlerInvoked = true; });
+
+        Assert.NotNull(sut);
+
+        // Trigger CreateProperty by serializing an object
+        var formatter = new NewtonsoftJsonFormatter(o =>
         {
-        }
+            o.Settings.ContractResolver = sut;
+        });
+        formatter.Serialize(new { Name = "test", Value = 42 }).ToEncodedString();
 
-        [Fact]
-        public void Create_ShouldReturnCamelCaseResolver_ForCamelCasePropertyNamesContractResolver()
+        Assert.True(handlerInvoked);
+    }
+
+    [Fact]
+    public void Create_WithHandlers_ShouldApplyHandlersForCamelCaseResolver_WhenContractWasCachedByAnotherResolver()
+    {
+        var cachedResolver = DynamicContractResolver.Create<CamelCasePropertyNamesContractResolver>();
+        var cachedFormatter = new NewtonsoftJsonFormatter(o =>
         {
-            var sut = DynamicContractResolver.Create<CamelCasePropertyNamesContractResolver>();
+            o.Settings.ContractResolver = cachedResolver;
+        });
+        cachedFormatter.Serialize(new SampleDto { FirstName = "John", LastName = "Doe" }).ToEncodedString();
 
-            Assert.NotNull(sut);
-            Assert.IsAssignableFrom<CamelCasePropertyNamesContractResolver>(sut);
-        }
-
-        [Fact]
-        public void Create_ShouldReturnDefaultContractResolver_ForDefaultContractResolver()
+        var handlerInvoked = false;
+        var sut = DynamicContractResolver.Create<CamelCasePropertyNamesContractResolver>(
+            (pi, jp) => { handlerInvoked = true; });
+        var formatter = new NewtonsoftJsonFormatter(o =>
         {
-            var sut = DynamicContractResolver.Create<DefaultContractResolver>();
+            o.Settings.ContractResolver = sut;
+        });
+        formatter.Serialize(new SampleDto { FirstName = "Jane", LastName = "Doe" }).ToEncodedString();
 
-            Assert.NotNull(sut);
-            Assert.IsAssignableFrom<DefaultContractResolver>(sut);
-        }
+        Assert.True(handlerInvoked);
+    }
 
-        [Fact]
-        public void Create_WithHandlers_ShouldApplyHandlersForCamelCaseResolver()
+    [Fact]
+    public void Create_WithHandlers_ShouldApplyHandlersForDefaultContractResolver()
+    {
+        var handlerInvoked = false;
+        var sut = DynamicContractResolver.Create<DefaultContractResolver>(
+            (pi, jp) => { handlerInvoked = true; });
+
+        Assert.NotNull(sut);
+
+        // Trigger CreateProperty by serializing an object
+        var formatter = new NewtonsoftJsonFormatter(o =>
         {
-            var handlerInvoked = false;
-            var sut = DynamicContractResolver.Create<CamelCasePropertyNamesContractResolver>(
-                (pi, jp) => { handlerInvoked = true; });
+            o.Settings.ContractResolver = sut;
+        });
+        formatter.Serialize(new { Name = "test", Value = 42 }).ToEncodedString();
 
-            Assert.NotNull(sut);
+        Assert.True(handlerInvoked);
+    }
 
-            // Trigger CreateProperty by serializing an object
-            var formatter = new NewtonsoftJsonFormatter(o =>
-            {
-                o.Settings.ContractResolver = sut;
-            });
-            formatter.Serialize(new { Name = "test", Value = 42 }).ToEncodedString();
-
-            Assert.True(handlerInvoked);
-        }
-
-        [Fact]
-        public void Create_WithHandlers_ShouldApplyHandlersForCamelCaseResolver_WhenContractWasCachedByAnotherResolver()
+    [Fact]
+    public void Create_ShouldApplyCamelCaseNaming_WhenCamelCaseResolverUsed()
+    {
+        var sut = DynamicContractResolver.Create<CamelCasePropertyNamesContractResolver>();
+        var formatter = new NewtonsoftJsonFormatter(o =>
         {
-            var cachedResolver = DynamicContractResolver.Create<CamelCasePropertyNamesContractResolver>();
-            var cachedFormatter = new NewtonsoftJsonFormatter(o =>
-            {
-                o.Settings.ContractResolver = cachedResolver;
-            });
-            cachedFormatter.Serialize(new SampleDto { FirstName = "John", LastName = "Doe" }).ToEncodedString();
+            o.Settings.ContractResolver = sut;
+        });
 
-            var handlerInvoked = false;
-            var sut = DynamicContractResolver.Create<CamelCasePropertyNamesContractResolver>(
-                (pi, jp) => { handlerInvoked = true; });
-            var formatter = new NewtonsoftJsonFormatter(o =>
-            {
-                o.Settings.ContractResolver = sut;
-            });
-            formatter.Serialize(new SampleDto { FirstName = "Jane", LastName = "Doe" }).ToEncodedString();
+        var json = formatter.Serialize(new SampleDto { FirstName = "John", LastName = "Doe" }).ToEncodedString();
 
-            Assert.True(handlerInvoked);
-        }
+        TestOutput.WriteLine(json);
 
-        [Fact]
-        public void Create_WithHandlers_ShouldApplyHandlersForDefaultContractResolver()
+        Assert.Contains("\"firstName\":", json);
+        Assert.Contains("\"lastName\":", json);
+    }
+
+    [Fact]
+    public void Create_ShouldApplyPascalCaseNaming_WhenDefaultContractResolverUsed()
+    {
+        var sut = DynamicContractResolver.Create<DefaultContractResolver>();
+        var formatter = new NewtonsoftJsonFormatter(o =>
         {
-            var handlerInvoked = false;
-            var sut = DynamicContractResolver.Create<DefaultContractResolver>(
-                (pi, jp) => { handlerInvoked = true; });
+            o.Settings.ContractResolver = sut;
+        });
 
-            Assert.NotNull(sut);
+        var json = formatter.Serialize(new SampleDto { FirstName = "John", LastName = "Doe" }).ToEncodedString();
 
-            // Trigger CreateProperty by serializing an object
-            var formatter = new NewtonsoftJsonFormatter(o =>
-            {
-                o.Settings.ContractResolver = sut;
-            });
-            formatter.Serialize(new { Name = "test", Value = 42 }).ToEncodedString();
+        TestOutput.WriteLine(json);
 
-            Assert.True(handlerInvoked);
-        }
+        Assert.Contains("\"FirstName\":", json);
+        Assert.Contains("\"LastName\":", json);
+    }
 
-        [Fact]
-        public void Create_ShouldApplyCamelCaseNaming_WhenCamelCaseResolverUsed()
-        {
-            var sut = DynamicContractResolver.Create<CamelCasePropertyNamesContractResolver>();
-            var formatter = new NewtonsoftJsonFormatter(o =>
-            {
-                o.Settings.ContractResolver = sut;
-            });
-
-            var json = formatter.Serialize(new SampleDto { FirstName = "John", LastName = "Doe" }).ToEncodedString();
-
-            TestOutput.WriteLine(json);
-
-            Assert.Contains("\"firstName\":", json);
-            Assert.Contains("\"lastName\":", json);
-        }
-
-        [Fact]
-        public void Create_ShouldApplyPascalCaseNaming_WhenDefaultContractResolverUsed()
-        {
-            var sut = DynamicContractResolver.Create<DefaultContractResolver>();
-            var formatter = new NewtonsoftJsonFormatter(o =>
-            {
-                o.Settings.ContractResolver = sut;
-            });
-
-            var json = formatter.Serialize(new SampleDto { FirstName = "John", LastName = "Doe" }).ToEncodedString();
-
-            TestOutput.WriteLine(json);
-
-            Assert.Contains("\"FirstName\":", json);
-            Assert.Contains("\"LastName\":", json);
-        }
-
-        private class SampleDto
-        {
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-        }
+    private class SampleDto
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }

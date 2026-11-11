@@ -1,19 +1,18 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
-namespace Codebelt.Extensions.Newtonsoft.Json
+namespace Codebelt.Extensions.Newtonsoft.Json;
+
+/// <summary>
+/// Extension methods for the <see cref="JsonSerializerSettings"/> class.
+/// </summary>
+public static class JsonSerializerSettingsExtensions
 {
     /// <summary>
-    /// Extension methods for the <see cref="JsonSerializerSettings"/> class.
+    /// Applies the specified <paramref name="settings"/> to the function delegate <see cref="JsonConvert.DefaultSettings"/>.
     /// </summary>
-    public static class JsonSerializerSettingsExtensions
+    /// <param name="settings">The JSON serializer settings.</param>
+    public static void ApplyToDefaultSettings(this JsonSerializerSettings settings)
     {
-        /// <summary>
-        /// Applies the specified <paramref name="settings"/> to the function delegate <see cref="JsonConvert.DefaultSettings"/>.
-        /// </summary>
-        /// <param name="settings">The JSON serializer settings.</param>
-        public static void ApplyToDefaultSettings(this JsonSerializerSettings settings)
-        {
-            JsonConvert.DefaultSettings = () => settings;
-        }
+        JsonConvert.DefaultSettings = () => settings;
     }
 }
