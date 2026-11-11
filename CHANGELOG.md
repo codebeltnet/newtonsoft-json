@@ -4,28 +4,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 For more details, please refer to `PackageReleaseNotes.txt` on a per assembly basis in the `.nuget` folder.
 
-> [!NOTE]  
+> [!NOTE]
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Newtonsoft.Json, Cuemon.Extensions.AspNetCore.Newtonsoft.Json and Cuemon.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json.
 
-## [11.0.0] - 2026-11-10
+## [11.0.0] - 2026-11-12
 
-This is a major release that adds .NET 11 as a target framework and drops .NET 9, while converting the source and test code to file-scoped namespaces, updating the CI pipeline and service update workflow, and refreshing the documentation and package release notes for the new support matrix.
+This major release adds .NET 11 and removes the dedicated .NET 9 targets while retaining .NET 10 and the core package's .NET Standard 2.0 asset. It also updates dependencies, test infrastructure, and documentation hosting.
+
+### Added
+
+- .NET 11 package and test targets,
+- `SonarAnalyzer.CSharp` 10.35.0.4138 for source projects.
 
 ### Changed
 
-- Target frameworks in `Directory.Build.props` and the library, application and test projects changed from `net10.0;net9.0` to `net11.0;net10.0`, with `netstandard2.0` retained for the core library and `net48` retained for Windows test runs,
-- `Microsoft.AspNetCore.Mvc.NewtonsoftJson` in `Directory.Packages.props` gained a `net11.0` declaration at 11.0.0-rc.2.26504.105, while its `net10.0` declaration remains at 10.0.13,
-- Codebelt.Coverlet.MTP upgraded from 10.1.0 to 10.1.1,
-- Source and test files converted to file-scoped namespaces and saved without a byte order mark,
-- README, contributor guidance, `AGENTS.md`, DocFX index and availability includes, and NuGet package READMEs updated to the .NET 11 and .NET 10 support matrix,
-- Package release notes for `Codebelt.Extensions.Newtonsoft.Json` and `Codebelt.Extensions.Newtonsoft.Json.App` record the 11.0.0 target framework change,
-- Package release notes for `Codebelt.Extensions.AspNetCore.Newtonsoft.Json` and `Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json` record the 11.0.0 target framework change,
-- Service update workflow derives the next version from the latest stable `vX.Y.Z` Git tag, reuses a pending `TBD` changelog heading and reads the availability text from the DocFX includes,
-- CI pipeline moved Ubuntu jobs from `ubuntu-24.04` to `ubuntu-26.04` (and `ubuntu-24.04-arm` to `ubuntu-26.04-arm`) and passes `include-preview: true` to the reusable build, pack, test, SonarCloud and CodeQL jobs.
+- Updated `Cuemon.AspNetCore.Mvc`, `Cuemon.Core`, `Cuemon.Extensions.AspNetCore`, `Cuemon.Extensions.AspNetCore.Authentication`, `Cuemon.Extensions.AspNetCore.Mvc`, `Cuemon.Extensions.Core`, `Cuemon.Extensions.IO`, and `Cuemon.IO` from 10.8.1 to 10.8.2,
+- Updated `Codebelt.Coverlet.MTP` from 10.1.0 to 10.1.1 and `Microsoft.Testing.Extensions.HangDump` from 2.5.1 to 2.5.2,
+- Updated the .NET 10 `Microsoft.AspNetCore.Mvc.NewtonsoftJson` declaration from 10.0.13 to 10.0.14 and added the .NET 11 declaration at 11.0.0-rc.3.26522.148,
+- Enabled preview SDK provisioning, moved Ubuntu CI jobs to 26.04, and split Docker test runners by .NET 10 and .NET 11,
+- Service-update automation uses Git tags, retains pending releases, validates release dates, and reads package availability from DocFX includes,
+- Updated package and contributor guidance for the supported frameworks and test environments,
+- Fingerprinted documentation assets use immutable caching for successful and 304 responses, no-store for errors, and full responses instead of ranges.
 
 ### Removed
 
-- .NET 9 (`net9.0`) target framework from the library, application and test projects, together with its `Microsoft.AspNetCore.Mvc.NewtonsoftJson` 9.0.21 declaration.
+- Dedicated .NET 9 package and test targets; the three modern-only packages require .NET 10 or later and the core package retains a .NET Standard 2.0 asset,
+- The .NET 9 conditional `Microsoft.AspNetCore.Mvc.NewtonsoftJson` 9.0.21 declaration; declarations remain for supported frameworks.
 
 ## [10.1.9] - 2026-10-17
 
